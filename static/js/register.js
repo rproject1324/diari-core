@@ -330,8 +330,54 @@ document.addEventListener('DOMContentLoaded', function () {
     const privacyAgreeBtn = document.getElementById('privacyConsentAgreeBtn');
     const privacyCancelBtn = document.getElementById('privacyConsentCancelBtn');
     const privacyCloseBtn = document.getElementById('privacyConsentCloseBtn');
+    const privacyProgressFill = document.getElementById('privacyConsentProgressFill');
+    const privacyProgressText = document.getElementById('privacyConsentProgressText');
+    const privacyHint = document.getElementById('privacyConsentHint');
+    const privacySections = privacyModal ? Array.from(privacyModal.querySelectorAll('.privacy-section')) : [];
     let privacyModalReturnFocus = null;
     let privacyModalSubmitFn = null;
+
+    function updatePrivacyProgress() {
+        if (!privacyScrollArea) return;
+        const scrollTop = privacyScrollArea.scrollTop;
+        const scrollHeight = privacyScrollArea.scrollHeight - privacyScrollArea.clientHeight;
+        let pct = 0;
+        if (scrollHeight <= 0) {
+            pct = 100;
+        } else {
+            pct = Math.min(100, Math.round((scrollTop / scrollHeight) * 100));
+        }
+        if (privacyProgressFill) {
+            privacyProgressFill.style.width = pct + '%';
+            privacyProgressFill.classList.toggle('is-complete', pct >= 100);
+        }
+        if (privacyProgressText) {
+            privacyProgressText.textContent = pct + '% read';
+            privacyProgressText.classList.toggle('is-complete', pct >= 100);
+        }
+        if (privacyHint) {
+            if (pct >= 100) {
+                privacyHint.innerHTML = '<i class="bi bi-check-circle-fill" aria-hidden="true"></i> All sections read — thank you';
+                privacyHint.classList.add('is-complete');
+            } else {
+                privacyHint.innerHTML = '<i class="bi bi-arrow-down" aria-hidden="true"></i> Scroll to read all sections';
+                privacyHint.classList.remove('is-complete');
+            }
+        }
+        if (privacyScrollArea && privacySections.length) {
+            const areaRect = privacyScrollArea.getBoundingClientRect();
+            privacySections.forEach((sec) => {
+                const rect = sec.getBoundingClientRect();
+                if (rect.top < areaRect.bottom - 60) sec.classList.add('is-read');
+            });
+        }
+    }
+
+    function resetPrivacyProgress() {
+        if (privacyScrollArea) privacyScrollArea.scrollTop = 0;
+        privacySections.forEach((sec) => sec.classList.remove('is-read'));
+        updatePrivacyProgress();
+    }
 
     function syncPrivacyAgreeButton() {
         if (!privacyAgreeBtn || !privacyCheckbox) return;
@@ -363,11 +409,12 @@ document.addEventListener('DOMContentLoaded', function () {
         privacyModalSubmitFn = submitFn;
         if (privacyCheckbox) privacyCheckbox.checked = false;
         syncPrivacyAgreeButton();
-        if (privacyScrollArea) privacyScrollArea.scrollTop = 0;
+        privacyModal.removeAttribute('hidden');
         privacyModal.classList.add('is-open');
         privacyModal.setAttribute('aria-hidden', 'false');
         document.documentElement.classList.add('privacy-modal-open');
         document.body.classList.add('privacy-modal-open');
+        resetPrivacyProgress();
         setTimeout(() => {
             if (privacyCheckbox) {
                 try {
@@ -389,6 +436,7 @@ document.addEventListener('DOMContentLoaded', function () {
         privacyCheckbox.addEventListener('change', syncPrivacyAgreeButton);
         privacyCancelBtn.addEventListener('click', () => closePrivacyModal());
         privacyCloseBtn.addEventListener('click', () => closePrivacyModal());
+        if (privacyScrollArea) privacyScrollArea.addEventListener('scroll', updatePrivacyProgress, { passive: true });
         privacyAgreeBtn.addEventListener('click', () => {
             if (!privacyCheckbox.checked || !privacyModalSubmitFn) return;
             const fn = privacyModalSubmitFn;
