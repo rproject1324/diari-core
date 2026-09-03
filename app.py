@@ -799,6 +799,13 @@ def api_register_verify():
 
     db.delete_pending_registration(email)
     csrf = _establish_user_session(int(payload["id"]))
+    
+    # Set admin session if the user's email matches DIARI_ADMIN_EMAIL
+    if _user_is_configured_admin(payload):
+        session["is_admin"] = True
+    else:
+        session.pop("is_admin", None)
+    
     return jsonify(
         {"success": True, "user": serialize_user(payload), "csrfToken": csrf}
     ), 201

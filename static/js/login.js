@@ -1060,7 +1060,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function goAfterLoginHydrate() {
             if (u.isAdmin) {
                 showNotification('Admin login successful! Redirecting...', 'success');
-                window.location.href = 'admin';
+                window.location.href = 'admin.html';
                 return;
             }
             showNotification('Login successful! Redirecting...', 'success');
@@ -1674,7 +1674,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     showNotification('Account verified successfully! Redirecting...', 'success');
                     setTimeout(() => {
-                        window.location.href = 'dashboard.html';
+                        if (u.isAdmin) {
+                            window.location.href = 'admin.html';
+                        } else {
+                            window.location.href = 'dashboard.html';
+                        }
                     }, 700);
                 })
                 .catch(() => {
@@ -2398,7 +2402,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const currentPage = window.location.pathname.split('/').pop();
             if (currentPage === 'index.html' || currentPage === '' || currentPage === 'login.html') {
                 if (user.isAdmin) {
-                    window.location.href = 'admin';
+                    window.location.href = 'admin.html';
                     return;
                 }
                 window.location.href = 'dashboard.html';

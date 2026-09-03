@@ -218,7 +218,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.DiariSecurity.setCsrfToken(data.csrfToken);
                 }
                 sessionStorage.removeItem('pendingRegistrationEmail');
-                window.location.href = 'dashboard.html';
+                // Redirect to admin page if user is admin, otherwise dashboard
+                if (u.isAdmin) {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
             })
             .catch(() => {
                 setError('Could not verify right now. Please try again.');
