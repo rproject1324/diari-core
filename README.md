@@ -32,7 +32,7 @@ The system combines secure account management, PostgreSQL storage, interactive i
 - **Two-factor authentication:** TOTP (Google Authenticator–compatible)
 - **PWA:** Web App Manifest, service worker, Cache Storage, Web Push (VAPID)
 - **Deployment:** [Railway](https://diari-core.up.railway.app/) (Flask + Gunicorn + PostgreSQL)
-- **Version control:** [GitHub](https://github.com/lproject012125/diari-core)
+- **Version control:** [GitHub](https://github.com/rproject1324/diari-core.git)
 
 ---
 
@@ -74,7 +74,7 @@ The live web app stays lightweight and only calls the Space over HTTP at runtime
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/lproject012125/diari-core.git
+git clone https://github.com/rproject1324/diari-core.git
 cd diari-core
 ```
 
@@ -137,7 +137,7 @@ Mood analysis uses the hosted Hugging Face Space even locally (internet required
 
 ### Production deploy (Railway)
 
-1. Connect [https://github.com/lproject012125/diari-core](https://github.com/lproject012125/diari-core) to a Railway project.
+1. Connect [https://github.com/rproject1324/diari-core.git](https://github.com/rproject1324/diari-core.git) to a Railway project.
 2. Add the PostgreSQL plugin (`DATABASE_URL` is injected).
 3. Mount a volume and set `UPLOADS_DIR` so photos survive redeploys.
 4. Set the environment variables above in Railway Variables (never in git).
@@ -158,7 +158,7 @@ Special mention: Jen Issa Mari B. Dimayacyac, for substantial assistance on the 
 ## Project Links
 
 - **Live Deployment (Railway):** https://diari-core.up.railway.app/
-- **GitHub Repository:** https://github.com/lproject012125/diari-core.git
+- **GitHub Repository:** https://github.com/rproject1324/diari-core.git
 - **Project Presentation (Google Slides):** https://docs.google.com/presentation/d/1jjBY2dVFIcDi_pvSQWGnR9x67_0Z5t7hMupsNOQbkPk/edit?usp=sharing
 - **ML Model (Hugging Face Hub):** https://huggingface.co/sseia/diari-core-mood
 - **ML Inference Space:** https://huggingface.co/spaces/sseia/diaricore-inference
