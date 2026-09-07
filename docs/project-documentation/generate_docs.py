@@ -200,8 +200,7 @@ def build():
     story.append(Paragraph("<b>Tolentino, Lawrence Dave P.</b>", s["CoverMeta"]))
     story.append(Spacer(1, 16 * mm))
     story.append(Paragraph("Live application: https://diaricore.up.railway.app/", s["CoverMeta"]))
-    story.append(Paragraph("GitHub (workspace origin): https://github.com/lproject012125/diari-core", s["CoverMeta"]))
-    story.append(Paragraph("GitHub (README remote): https://github.com/0323-3621-cell/diaricore", s["CoverMeta"]))
+    story.append(Paragraph("GitHub: https://github.com/rproject1324/diari-core", s["CoverMeta"]))
     story.append(PageBreak())
 
     # TOC
@@ -816,8 +815,7 @@ def build():
         ["Resource", "URL"],
         [
             ["Live app (README)", "https://diaricore.up.railway.app/"],
-            ["GitHub (this workspace origin)", "https://github.com/lproject012125/diari-core"],
-            ["GitHub (README remote)", "https://github.com/0323-3621-cell/diaricore"],
+            ["GitHub repository", "https://github.com/rproject1324/diari-core"],
             ["Model Hub (current code default)", "https://huggingface.co/sseia/diari-core-mood"],
             ["Inference Space (current code default)", "https://huggingface.co/spaces/sseia/diaricore-inference"],
             ["Presentation slides", "https://docs.google.com/presentation/d/1jjBY2dVFIcDi_pvSQWGnR9x67_0Z5t7hMupsNOQbkPk/edit?usp=sharing"],
