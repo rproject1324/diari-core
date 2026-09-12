@@ -147,6 +147,22 @@ Live app: **https://diari-core.up.railway.app/**
 
 ---
 
+## Quick Testing Accounts
+
+For quick testing of the system, you may use the following pre-configured accounts:
+
+**Admin Account:**
+- Username: `Admin`
+- Password: `Adm1nUser2026@`
+
+**User Account:**
+- Username: `Guest`
+- Password: `GvestUser2026@`
+
+> **Note:** These accounts are for testing purposes only. In a production environment, always use strong, unique credentials and enable OTP verification.
+
+---
+
 ## Author
 
 Tolentino, Lawrence Dave P.
