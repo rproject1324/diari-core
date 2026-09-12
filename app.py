@@ -4,6 +4,7 @@ Deploy on Railway with PostgreSQL (DATABASE_URL). Local dev uses SQLite.
 """
 
 import hashlib
+import html
 import os
 import json
 import time
@@ -299,6 +300,42 @@ def _generate_otp() -> str:
     return f"{random.randint(0, 999999):06d}"
 
 
+def _otp_email_html(title: str, nickname: str, intro: str, code: str, expiry_note: str, extra_note: str = "") -> str:
+    """Branded DiariCore OTP email (email-client-safe: tables + inline styles only)."""
+    safe_name = html.escape(nickname or "there")
+    safe_title = html.escape(title)
+    safe_code = html.escape(code)
+    extra_row = (
+        f"<p style='margin: 14px 0 0; font-size: 13px; line-height: 1.6; color: #55665D;'>{extra_note}</p>"
+        if extra_note else ""
+    )
+    return f"""<html><body style='margin: 0; padding: 0; background-color: #EDF2EC;'>
+<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background-color: #EDF2EC; padding: 28px 12px;'>
+<tr><td align='center'>
+<table role='presentation' width='560' cellpadding='0' cellspacing='0' style='max-width: 560px; width: 100%;'>
+<tr><td align='center' style='background-color: #3D6849; border-radius: 14px 14px 0 0; padding: 26px 24px 22px;'>
+<div style='font-family: Arial, Helvetica, sans-serif; font-size: 24px; font-weight: bold; color: #FFFFFF; letter-spacing: 0.5px;'>&#x1F4D6; DiariCore</div>
+<div style='font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #C9DCCF; margin-top: 6px; letter-spacing: 1.5px;'>MINDFUL JOURNALING</div>
+</td></tr>
+<tr><td style='background-color: #FFFFFF; border-radius: 0 0 14px 14px; padding: 30px 32px 26px; border: 1px solid #DEE7DD; border-top: none;'>
+<h2 style='font-family: Arial, Helvetica, sans-serif; font-size: 20px; color: #2F3E36; margin: 0 0 12px;'>{safe_title}</h2>
+<p style='font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.6; color: #3D4A42; margin: 0 0 8px;'>Hello {safe_name},</p>
+<p style='font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.6; color: #3D4A42; margin: 0 0 18px;'>{intro}</p>
+<table role='presentation' width='100%' cellpadding='0' cellspacing='0'><tr><td align='center' style='background-color: #EBF3EE; border: 1.5px dashed #7FA88F; border-radius: 10px; padding: 18px 12px;'>
+<div style='font-family: Arial, Helvetica, sans-serif; font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #2F3E36;'>{safe_code}</div>
+</td></tr></table>
+<p style='font-family: Arial, Helvetica, sans-serif; font-size: 13px; line-height: 1.6; color: #7D8A84; margin: 18px 0 0;'>{expiry_note}</p>
+{extra_row}
+</td></tr>
+<tr><td align='center' style='padding: 16px 12px 0;'>
+<p style='font-family: Arial, Helvetica, sans-serif; font-size: 11px; line-height: 1.6; color: #9AA79E; margin: 0;'>If you did not request this email, you can safely ignore it.<br>DiariCore &bull; your private space for reflection and growth.</p>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body></html>"""
+
+
 def _send_otp_email(email: str, otp_code: str, nickname: str) -> bool:
     api_key = os.environ.get("BREVO_API_KEY") or db.get_system_setting("brevo_api_key")
     sender_email = os.environ.get("BREVO_SENDER_EMAIL") or db.get_system_setting("brevo_sender_email")
@@ -317,15 +354,13 @@ def _send_otp_email(email: str, otp_code: str, nickname: str) -> bool:
         "sender": {"name": sender_name, "email": sender_email},
         "to": [{"email": email, "name": nickname or email.split("@")[0]}],
         "subject": "DiariCore verification code",
-        "htmlContent": f"""
-            <html><body style='font-family: Arial, sans-serif; color: #2F3E36;'>
-            <h2>Verify your DiariCore account</h2>
-            <p>Hello {nickname or 'there'},</p>
-            <p>Your verification code is:</p>
-            <p style='font-size: 28px; font-weight: bold; letter-spacing: 6px;'>{otp_code}</p>
-            <p>This code expires in 10 minutes.</p>
-            </body></html>
-        """,
+        "htmlContent": _otp_email_html(
+            "Verify your DiariCore account",
+            nickname,
+            "Your verification code is:",
+            otp_code,
+            "This code expires in 10 minutes.",
+        ),
         "textContent": f"Your DiariCore verification code is {otp_code}. It expires in 10 minutes.",
     }
     req = urllib.request.Request(
@@ -359,15 +394,13 @@ def _send_password_reset_email(email: str, reset_code: str, nickname: str) -> bo
         "sender": {"name": sender_name, "email": sender_email},
         "to": [{"email": email, "name": nickname or email.split("@")[0]}],
         "subject": "DiariCore password reset code",
-        "htmlContent": f"""
-            <html><body style='font-family: Arial, sans-serif; color: #2F3E36;'>
-            <h2>Reset your DiariCore password</h2>
-            <p>Hello {nickname or 'there'},</p>
-            <p>Use this code to reset your password:</p>
-            <p style='font-size: 28px; font-weight: bold; letter-spacing: 6px;'>{reset_code}</p>
-            <p>This code expires in 10 minutes.</p>
-            </body></html>
-        """,
+        "htmlContent": _otp_email_html(
+            "Reset your DiariCore password",
+            nickname,
+            "Use this code to reset your password:",
+            reset_code,
+            "This code expires in 10 minutes.",
+        ),
         "textContent": f"Your DiariCore password reset code is {reset_code}. It expires in 10 minutes.",
     }
     req = urllib.request.Request(
@@ -402,18 +435,17 @@ def _send_login_totp_recovery_email(email: str, recovery_code: str, nickname: st
         "sender": {"name": sender_name, "email": sender_email},
         "to": [{"email": email, "name": nickname or email.split("@")[0]}],
         "subject": "DiariCore sign-in — authenticator recovery code",
-        "htmlContent": f"""
-            <html><body style='font-family: Arial, sans-serif; color: #2F3E36;'>
-            <h2>Authenticator recovery</h2>
-            <p>Hello {nickname or 'there'},</p>
-            <p>Someone started sign-in to DiariCore and asked to recover access without an authenticator app code.
-            If this was you, enter this one-time code on the website:</p>
-            <p style='font-size: 28px; font-weight: bold; letter-spacing: 6px;'>{recovery_code}</p>
-            <p>This code expires in 15 minutes. If you did not request this, you can ignore this email and your password
-            still protects your account.</p>
-            <p><strong>Note:</strong> using this code will turn off authenticator sign-in for your account until you enable it again in Profile.</p>
-            </body></html>
-        """,
+        "htmlContent": _otp_email_html(
+            "Authenticator recovery",
+            nickname,
+            "Someone started sign-in to DiariCore and asked to recover access without an authenticator app code."
+            " If this was you, enter this one-time code on the website:",
+            recovery_code,
+            "This code expires in 15 minutes. If you did not request this, you can ignore this email and your"
+            " password still protects your account.",
+            "<strong>Note:</strong> using this code will turn off authenticator sign-in for your account until"
+            " you enable it again in Profile.",
+        ),
         "textContent": (
             f"DiariCore authenticator recovery code: {recovery_code}. Expires in 15 minutes. "
             "Using it turns off authenticator sign-in until you set it up again in Profile."
@@ -1424,15 +1456,13 @@ def _send_profile_email_change_otp_email(new_email: str, code: str, nickname: st
         "sender": {"name": sender_name, "email": sender_email},
         "to": [{"email": new_email, "name": nickname or new_email.split("@")[0]}],
         "subject": "DiariCore — verify your new email",
-        "htmlContent": f"""
-            <html><body style='font-family: Arial, sans-serif; color: #2F3E36;'>
-            <h2>Confirm your new email</h2>
-            <p>Hello {nickname or 'there'},</p>
-            <p>Use this code to confirm updating your DiariCore account email to this address:</p>
-            <p style='font-size: 28px; font-weight: bold; letter-spacing: 6px;'>{code}</p>
-            <p>This code expires in 10 minutes. If you did not request this, ignore this email.</p>
-            </body></html>
-        """,
+        "htmlContent": _otp_email_html(
+            "Confirm your new email",
+            nickname,
+            "Use this code to confirm updating your DiariCore account email to this address:",
+            code,
+            "This code expires in 10 minutes. If you did not request this, ignore this email.",
+        ),
         "textContent": (
             f"Your DiariCore email verification code is {code}. It expires in 10 minutes. "
             "If you did not request an email change, ignore this message."
@@ -1660,15 +1690,13 @@ def _send_profile_password_change_email(email: str, code: str, nickname: str) ->
         "sender": {"name": sender_name, "email": sender_email},
         "to": [{"email": email, "name": nickname or email.split("@")[0]}],
         "subject": "DiariCore — confirm password change",
-        "htmlContent": f"""
-            <html><body style='font-family: Arial, sans-serif; color: #2F3E36;'>
-            <h2>Confirm your password change</h2>
-            <p>Hello {nickname or 'there'},</p>
-            <p>Someone requested to change the password on your DiariCore account. Enter this code to confirm:</p>
-            <p style='font-size: 28px; font-weight: bold; letter-spacing: 6px;'>{code}</p>
-            <p>This code expires in 10 minutes. If you did not request this, ignore this email.</p>
-            </body></html>
-        """,
+        "htmlContent": _otp_email_html(
+            "Confirm your password change",
+            nickname,
+            "Someone requested to change the password on your DiariCore account. Enter this code to confirm:",
+            code,
+            "This code expires in 10 minutes. If you did not request this, ignore this email.",
+        ),
         "textContent": (
             f"Your DiariCore password change confirmation code is {code}. It expires in 10 minutes. "
             "If you did not request a password change, ignore this email."

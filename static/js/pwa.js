@@ -212,6 +212,25 @@
 
     let deferredInstallPrompt = null;
 
+    function isMobileDevice() {
+        try {
+            const ua = window.navigator.userAgent || '';
+            if (/Android|iPhone|iPad|iPod|Mobile|Phone/i.test(ua)) return true;
+            const minScreen = Math.min(window.screen.width || 0, window.screen.height || 0);
+            if (minScreen > 0 && minScreen < 768 && (navigator.maxTouchPoints || 0) > 0) return true;
+            if (
+                window.matchMedia &&
+                window.matchMedia('(pointer: coarse)').matches &&
+                Math.min(window.innerWidth || 0, window.innerHeight || 0) < 820
+            ) {
+                return true;
+            }
+        } catch (_) {
+            /* ignore */
+        }
+        return false;
+    }
+
     function hideInstallBanner() {
         const el = document.getElementById('diariPwaInstallBanner');
         if (el) el.hidden = true;
@@ -308,6 +327,7 @@
 
     function showInstallBanner() {
         if (isStandalone()) return;
+        if (!isMobileDevice()) return;
         try {
             const dismissed = Number(sessionStorage.getItem('diariPwaInstallDismissed') || 0);
             if (dismissed && Date.now() - dismissed < 60 * 1000) return;
