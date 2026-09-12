@@ -636,7 +636,9 @@ function updateGreeting(user) {
     if (!titleEl) return;
     const displayName = (user?.firstName || user?.nickname || 'there').trim();
     const firstName = displayName.split(' ')[0];
-    titleEl.textContent = `Good Morning, ${firstName}`;
+    const hour = new Date().getHours();
+    const daypart = hour >= 5 && hour < 12 ? 'Morning' : hour >= 12 && hour < 18 ? 'Afternoon' : 'Evening';
+    titleEl.textContent = `Good ${daypart}, ${firstName}`;
 }
 
 /** Vendored static mood art under static/img/noto-emoji-static/ (single-frame PNG). */
