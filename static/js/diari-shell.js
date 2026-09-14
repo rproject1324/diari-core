@@ -157,9 +157,11 @@
     var PENDING = 'diari-shell-pending';
     var READY = 'diari-shell-ready';
     var releaseQueued = false;
+    var releaseFallbackTimer = null;
 
     function completeRelease() {
         if (!document.documentElement.classList.contains(PENDING)) return;
+        if (releaseFallbackTimer) { clearTimeout(releaseFallbackTimer); releaseFallbackTimer = null; }
         requestAnimationFrame(function () {
             requestAnimationFrame(function () {
                 document.documentElement.classList.remove(PENDING);
@@ -178,23 +180,30 @@
             typeof window.DiariPwaLaunch.notifyAppReady === 'function'
         ) {
             window.DiariPwaLaunch.notifyAppReady();
-            return;
-        }
-        if (window.DiariPwaLaunch && typeof window.DiariPwaLaunch.isFinished === 'function') {
+        } else if (window.DiariPwaLaunch && typeof window.DiariPwaLaunch.isFinished === 'function') {
             if (!window.DiariPwaLaunch.isFinished()) {
                 if (typeof window.DiariPwaLaunch.whenFinished === 'function') {
                     window.DiariPwaLaunch.whenFinished().then(completeRelease);
                 }
                 return;
             }
+        } else {
+            completeRelease();
+            return;
         }
-        completeRelease();
+
+        if (!releaseFallbackTimer) {
+            releaseFallbackTimer = setTimeout(function () {
+                releaseFallbackTimer = null;
+                completeRelease();
+            }, 20000);
+        }
     }
 
     window.DiariShell = {
         release: release,
         _completeRelease: function () {
-            if (releaseQueued) completeRelease();
+            completeRelease();
         },
     };
 
