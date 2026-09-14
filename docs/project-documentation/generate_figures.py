@@ -11,6 +11,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent
 FIG = ROOT / "figures"
 FIG.mkdir(parents=True, exist_ok=True)
+DIAGRAMS = ROOT.parent.parent / "diagrams-image"
+DIAGRAMS.mkdir(parents=True, exist_ok=True)
 DATASET = Path(
     r"C:\Users\lawre\OneDrive\Desktop\myproject\DCore\FinalProject_Resources\1500_dataset_expanded.xlsx"
 )
@@ -43,9 +45,13 @@ COLORS = {
 }
 
 
-def save(fig, name: str):
+def save(fig, name: str, svg_name: str | None = None):
     out = FIG / name
     fig.savefig(out, dpi=160, bbox_inches="tight", facecolor="white")
+    if svg_name:
+        svg_out = DIAGRAMS / svg_name
+        fig.savefig(svg_out, format="svg", bbox_inches="tight", facecolor="white")
+        print("wrote", svg_out)
     plt.close(fig)
     print("wrote", out)
 
@@ -63,7 +69,7 @@ def dataset_charts():
     for b, v in zip(bars, counts.values):
         ax.text(b.get_x() + b.get_width() / 2, v + 4, str(int(v)), ha="center", va="bottom", fontsize=9)
     ax.set_ylim(0, max(counts.values) * 1.14)
-    save(fig, "chart-label-distribution.png")
+    save(fig, "chart-label-distribution.png", "diagram-emotion-label-distribution.svg")
 
     lang = df["language"].astype(str).str.strip().str.lower()
     lang = lang[lang.isin(["english", "taglish", "filipino"])].value_counts().reindex(
@@ -83,7 +89,7 @@ def dataset_charts():
         t.set_color("white")
         t.set_fontsize(8)
     ax.set_title("Training dataset — language distribution")
-    save(fig, "chart-language-distribution.png")
+    save(fig, "chart-language-distribution.png", "diagram-language-distribution.svg")
 
 
 def box(ax, x, y, w, h, text, fc="#F7FAF8", ec="#3D5A4C", fs=8.2, bold=False):
@@ -99,12 +105,15 @@ def box(ax, x, y, w, h, text, fc="#F7FAF8", ec="#3D5A4C", fs=8.2, bold=False):
     ax.add_patch(p)
     lines = [ln for ln in str(text).split("\n") if ln != ""]
     n = max(len(lines), 1)
-    line_h = min(0.24, (h * 0.78) / n)
-    start = y + h / 2 + ((n - 1) * line_h) / 2
+    padding = 0.12
+    available_h = h - 2 * padding
+    line_h = min(0.22, available_h / n)
+    total_text_h = (n - 1) * line_h
+    start_y = y + h / 2 + total_text_h / 2
     for i, line in enumerate(lines):
         ax.text(
             x + w / 2,
-            start - i * line_h,
+            start_y - i * line_h,
             line,
             ha="center",
             va="center",
@@ -127,44 +136,44 @@ def arrow(ax, x1, y1, x2, y2):
 
 
 def architecture():
-    fig, ax = plt.subplots(figsize=(10.2, 6.4))
+    fig, ax = plt.subplots(figsize=(10.2, 6.8))
     ax.set_xlim(0, 10.2)
-    ax.set_ylim(0, 6.4)
+    ax.set_ylim(0, 6.8)
     ax.axis("off")
     ax.set_title("DiariCore — current runtime architecture", fontsize=13, pad=8, loc="left")
 
-    box(ax, 0.25, 5.35, 2.2, 0.75, "User\nBrowser / Installed PWA", fc="#EEF4F1", bold=True)
-    box(ax, 3.15, 5.35, 3.7, 0.75, "Railway web service\nFlask + Gunicorn  (diaricore.up.railway.app)", fc="#E8F0EC", bold=True)
-    box(ax, 7.4, 5.35, 2.5, 0.75, "Railway Postgres\njournal, users, auth", fc="#F4F1EA", bold=True)
+    box(ax, 0.25, 5.6, 2.2, 0.9, "User\nBrowser / Installed PWA", fc="#EEF4F1", bold=True)
+    box(ax, 3.15, 5.6, 3.7, 0.9, "Railway web service\nFlask + Gunicorn  (diaricore.up.railway.app)", fc="#E8F0EC", bold=True)
+    box(ax, 7.4, 5.6, 2.5, 0.9, "Railway Postgres\njournal, users, auth", fc="#F4F1EA", bold=True)
 
-    box(ax, 0.25, 3.85, 2.2, 0.85, "Static assets\nService worker cache\nWeb App Manifest", fc="#F7FAF8")
-    box(ax, 3.15, 3.7, 3.7, 1.15, "Application modules\nAuth, journal CRUD, uploads,\ninsights APIs, push dispatcher", fc="#F7FAF8")
-    box(ax, 7.4, 3.85, 2.5, 0.85, "Persistent volume\n/data/uploads", fc="#F4F1EA")
+    box(ax, 0.25, 4.0, 2.2, 1.0, "Static assets\nService worker cache\nWeb App Manifest", fc="#F7FAF8")
+    box(ax, 3.15, 3.85, 3.7, 1.3, "Application modules\nAuth, journal CRUD, uploads,\ninsights APIs, push dispatcher", fc="#F7FAF8")
+    box(ax, 7.4, 4.0, 2.5, 1.0, "Persistent volume\n/data/uploads", fc="#F4F1EA")
 
-    box(ax, 0.25, 2.15, 2.35, 1.05, "Hugging Face Space\nONNX inference\nPOST /predict", fc="#EDE9F6", ec="#5B4B8A", bold=True)
-    box(ax, 2.9, 2.15, 2.35, 1.05, "Hugging Face Hub\nFine-tuned XLM-RoBERTa\nONNX + tokenizer", fc="#EDE9F6", ec="#5B4B8A")
-    box(ax, 5.55, 2.15, 2.1, 1.05, "Brevo\nTransactional email\nOTP / reset / recovery", fc="#F8EEE8", ec="#A86B4A")
-    box(ax, 7.9, 2.15, 2.0, 1.05, "HF Inference\nWhisper ASR\n(voice fallback)", fc="#EDE9F6", ec="#5B4B8A")
+    box(ax, 0.25, 2.2, 2.35, 1.2, "Hugging Face Space\nONNX inference\nPOST /predict", fc="#EDE9F6", ec="#5B4B8A", bold=True)
+    box(ax, 2.9, 2.2, 2.35, 1.2, "Hugging Face Hub\nFine-tuned XLM-RoBERTa\nONNX + tokenizer", fc="#EDE9F6", ec="#5B4B8A")
+    box(ax, 5.55, 2.2, 2.1, 1.2, "Brevo\nTransactional email\nOTP / reset / recovery", fc="#F8EEE8", ec="#A86B4A")
+    box(ax, 7.9, 2.2, 2.0, 1.2, "HF Inference\nWhisper ASR\n(voice fallback)", fc="#EDE9F6", ec="#5B4B8A")
 
-    box(ax, 0.25, 0.45, 3.3, 1.05, "Google Authenticator (user device)\nTOTP codes for optional 2FA", fc="#EEF2F7", ec="#4A6278")
-    box(ax, 3.8, 0.45, 3.1, 1.05, "Optional cron-job.org\nPOST /api/internal/push/dispatch\nif internal scheduler is disabled", fc="#EEF2F7", ec="#4A6278")
-    box(ax, 7.15, 0.45, 2.75, 1.05, "Web Push (VAPID)\nInstalled PWA devices", fc="#EEF2F7", ec="#4A6278")
+    box(ax, 0.25, 0.35, 3.3, 1.2, "Google Authenticator (user device)\nTOTP codes for optional 2FA", fc="#EEF2F7", ec="#4A6278")
+    box(ax, 3.8, 0.35, 3.1, 1.2, "Optional cron-job.org\nPOST /api/internal/push/dispatch\nif internal scheduler is disabled", fc="#EEF2F7", ec="#4A6278")
+    box(ax, 7.15, 0.35, 2.75, 1.2, "Web Push (VAPID)\nInstalled PWA devices", fc="#EEF2F7", ec="#4A6278")
 
-    arrow(ax, 2.45, 5.72, 3.15, 5.72)
-    arrow(ax, 6.85, 5.72, 7.4, 5.72)
-    arrow(ax, 5.0, 5.35, 5.0, 4.85)
-    arrow(ax, 4.2, 3.7, 1.45, 3.2)
-    arrow(ax, 5.8, 3.7, 6.55, 3.2)
-    arrow(ax, 6.2, 3.7, 8.7, 3.2)
-    arrow(ax, 1.4, 2.15, 1.9, 1.5)
-    arrow(ax, 5.0, 3.7, 5.35, 1.5)
-    save(fig, "diagram-runtime-architecture.png")
+    arrow(ax, 2.45, 6.05, 3.15, 6.05)
+    arrow(ax, 6.85, 6.05, 7.4, 6.05)
+    arrow(ax, 5.0, 5.6, 5.0, 5.15)
+    arrow(ax, 4.2, 3.85, 1.45, 3.4)
+    arrow(ax, 5.8, 3.85, 6.55, 3.4)
+    arrow(ax, 6.2, 3.85, 8.7, 3.4)
+    arrow(ax, 1.4, 2.2, 1.9, 1.55)
+    arrow(ax, 5.0, 3.85, 5.35, 1.55)
+    save(fig, "diagram-runtime-architecture.png", "diagram-runtime-architecture.svg")
 
 
 def ml_pipeline():
-    fig, ax = plt.subplots(figsize=(10.2, 3.35))
+    fig, ax = plt.subplots(figsize=(10.2, 3.6))
     ax.set_xlim(0, 10.2)
-    ax.set_ylim(0, 3.35)
+    ax.set_ylim(0, 3.6)
     ax.axis("off")
     ax.set_title("Emotion model workflow (training to inference)", fontsize=13, pad=6, loc="left")
     steps = [
@@ -175,23 +184,23 @@ def ml_pipeline():
         (8.15, "HF Space\n/predict → Railway\njournal save/re-analyze"),
     ]
     for x, t in steps:
-        box(ax, x, 0.85, 1.85, 1.55, t, fc="#F3F7F5", fs=8)
+        box(ax, x, 0.85, 1.85, 1.75, t, fc="#F3F7F5", fs=8)
     for i in range(len(steps) - 1):
         x1 = steps[i][0] + 1.85
         x2 = steps[i + 1][0]
-        arrow(ax, x1, 1.62, x2, 1.62)
-    save(fig, "diagram-ml-pipeline.png")
+        arrow(ax, x1, 1.72, x2, 1.72)
+    save(fig, "diagram-ml-pipeline.png", "diagram-emotion-workflow.svg")
 
 
 def erd():
-    fig, ax = plt.subplots(figsize=(11.2, 7.4))
+    fig, ax = plt.subplots(figsize=(11.2, 7.8))
     ax.set_xlim(0, 11.2)
-    ax.set_ylim(0, 7.4)
+    ax.set_ylim(0, 7.8)
     ax.axis("off")
     ax.set_title("Logical data model (simplified)", fontsize=13, pad=8, loc="left")
 
     def entity(x, y, w, h, title, fields):
-        header_h = 0.38
+        header_h = 0.4
         body = FancyBboxPatch(
             (x, y),
             w,
@@ -224,9 +233,9 @@ def erd():
             fontfamily="sans-serif",
         )
         n = len(fields)
-        usable = h - header_h - 0.12
+        usable = h - header_h - 0.15
         line_h = usable / max(n, 1)
-        top = y + h - header_h - 0.08
+        top = y + h - header_h - 0.1
         for i, field in enumerate(fields):
             ax.text(
                 x + 0.12,
@@ -239,7 +248,7 @@ def erd():
                 fontfamily="sans-serif",
             )
 
-    entity(0.2, 4.55, 3.45, 2.55, "users", [
+    entity(0.2, 4.85, 3.45, 2.7, "users", [
         "PK  id",
         "nickname, email, password_hash",
         "profile fields, avatar_data_url",
@@ -248,7 +257,7 @@ def erd():
         "is_disabled, last_login",
         "privacy_agreed_at",
     ])
-    entity(3.85, 4.55, 3.55, 2.55, "journal_entries", [
+    entity(3.85, 4.85, 3.55, 2.7, "journal_entries", [
         "PK  id",
         "FK  user_id  →  users.id",
         "title, text_content, tags_json",
@@ -256,44 +265,44 @@ def erd():
         "all_probs_json, image_urls_json",
         "entry_datetime_utc, timestamps",
     ])
-    entity(7.6, 5.15, 3.35, 1.95, "user_tags", [
+    entity(7.6, 5.45, 3.35, 2.1, "user_tags", [
         "PK  (user_id, tag)",
         "FK  user_id  →  users.id",
         "icon_name",
     ])
-    entity(0.2, 2.35, 3.45, 1.9, "pending_registrations", [
+    entity(0.2, 2.55, 3.45, 2.0, "pending_registrations", [
         "PK  email",
         "otp_code, otp_expires_at",
         "profile fields pending verify",
     ])
-    entity(3.85, 2.35, 3.55, 1.9, "password_resets", [
+    entity(3.85, 2.55, 3.55, 2.0, "password_resets", [
         "PK  email",
         "reset_code, expires_at",
     ])
-    entity(7.6, 2.35, 3.35, 1.9, "push_subscriptions", [
+    entity(7.6, 2.55, 3.35, 2.0, "push_subscriptions", [
         "PK  id",
         "FK  user_id  →  users.id",
         "endpoint, subscription_json",
     ])
-    entity(0.2, 0.2, 3.45, 1.85, "login_lockouts", [
+    entity(0.2, 0.2, 3.45, 2.0, "login_lockouts", [
         "account key, failed attempts",
         "lock expiry",
         "otp_resend_limits_* (per flow)",
     ])
-    entity(3.85, 0.2, 3.55, 1.85, "2FA / OTP challenges", [
+    entity(3.85, 0.2, 3.55, 2.0, "2FA / OTP challenges", [
         "login_totp_challenges",
         "login_totp_recovery_otps",
         "email / password change OTPs",
     ])
-    entity(7.6, 0.2, 3.35, 1.85, "admin & settings", [
+    entity(7.6, 0.2, 3.35, 2.0, "admin & settings", [
         "admin_audit_logs",
         "system_settings",
     ])
 
-    ax.annotate("", xy=(3.85, 6.0), xytext=(3.65, 6.0), arrowprops=dict(arrowstyle="-|>", color="#4A5568", lw=1.1))
-    ax.annotate("", xy=(7.6, 6.35), xytext=(7.4, 6.35), arrowprops=dict(arrowstyle="-|>", color="#4A5568", lw=1.1))
-    ax.annotate("", xy=(9.27, 4.25), xytext=(9.27, 5.15), arrowprops=dict(arrowstyle="-|>", color="#4A5568", lw=1.1))
-    save(fig, "diagram-erd.png")
+    ax.annotate("", xy=(3.85, 6.3), xytext=(3.65, 6.3), arrowprops=dict(arrowstyle="-|>", color="#4A5568", lw=1.1))
+    ax.annotate("", xy=(7.6, 6.65), xytext=(7.4, 6.65), arrowprops=dict(arrowstyle="-|>", color="#4A5568", lw=1.1))
+    ax.annotate("", xy=(9.27, 4.55), xytext=(9.27, 5.45), arrowprops=dict(arrowstyle="-|>", color="#4A5568", lw=1.1))
+    save(fig, "diagram-erd.png", "diagram-logical-data-model.svg")
 
 
 if __name__ == "__main__":
