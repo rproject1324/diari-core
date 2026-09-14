@@ -181,12 +181,14 @@
         ) {
             window.DiariPwaLaunch.notifyAppReady();
         } else if (window.DiariPwaLaunch && typeof window.DiariPwaLaunch.isFinished === 'function') {
-            if (!window.DiariPwaLaunch.isFinished()) {
-                if (typeof window.DiariPwaLaunch.whenFinished === 'function') {
-                    window.DiariPwaLaunch.whenFinished().then(completeRelease);
-                }
+            if (window.DiariPwaLaunch.isFinished()) {
+                completeRelease();
                 return;
             }
+            if (typeof window.DiariPwaLaunch.whenFinished === 'function') {
+                window.DiariPwaLaunch.whenFinished().then(completeRelease);
+            }
+            return;
         } else {
             completeRelease();
             return;
