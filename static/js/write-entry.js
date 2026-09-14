@@ -1409,6 +1409,53 @@ document.addEventListener('DOMContentLoaded', async function () {
     /** @type {null | { kind: 'href', href: string } | { kind: 'logout' }} */
     let pendingWriteDiscard = null;
 
+    /* ── Cold-start notice modal ─────────────────────────────────── */
+    function coldStartNoticeStorageKey() {
+        try {
+            const user = JSON.parse(localStorage.getItem('diariCoreUser') || 'null');
+            const uid = Number(user?.id || user?.userId || 0);
+            if (uid > 0) return 'diariWriteColdStartNoticeDismissed:' + uid;
+        } catch (_) { /* ignore */ }
+        return 'diariWriteColdStartNoticeDismissed';
+    }
+
+    function initWriteColdStartNoticeModal() {
+        const modal = document.getElementById('writeColdStartNotice');
+        const okBtn = document.getElementById('writeColdStartOkBtn');
+        const dontShowCheckbox = document.getElementById('writeColdStartDontShow');
+        if (!modal || !okBtn) return;
+
+        const noticeKey = coldStartNoticeStorageKey();
+
+        function closeNotice() {
+            modal.hidden = true;
+            document.body.style.overflow = '';
+            if (dontShowCheckbox && dontShowCheckbox.checked) {
+                try { localStorage.setItem(noticeKey, '1'); } catch (_) {}
+            }
+        }
+
+        function openNotice() {
+            modal.hidden = false;
+            document.body.style.overflow = 'hidden';
+            okBtn.focus();
+        }
+
+        okBtn.addEventListener('click', closeNotice);
+        modal.querySelectorAll('[data-coldstart-dismiss]').forEach(function (el) {
+            el.addEventListener('click', closeNotice);
+        });
+        modal.addEventListener('keydown', function (ev) {
+            if (ev.key === 'Escape') closeNotice();
+        });
+
+        var dismissed = false;
+        try { dismissed = localStorage.getItem(noticeKey) === '1'; } catch (_) {}
+        if (!dismissed) openNotice();
+    }
+
+    initWriteColdStartNoticeModal();
+
     function releaseBodyScrollIfNoModals() {
         const d = writeDiscardModal;
         const t = writeDeleteTagModal;

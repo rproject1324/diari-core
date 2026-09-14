@@ -122,6 +122,7 @@
                 'diariCoreDraft',
                 'diariCoreFocusEntryId',
                 'diariVoiceEntryNoticeDismissed',
+                'diariWriteColdStartNoticeDismissed',
                 'diariCoreSyncRevision',
             ].forEach((key) => localStorage.removeItem(key));
         } catch (_) {

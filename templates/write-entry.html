@@ -474,7 +474,63 @@
             </div>
         </div>
     </div>
-    
+
+    <div class="write-coldstart-notice" id="writeColdStartNotice" hidden role="dialog" aria-modal="true" aria-labelledby="writeColdStartNoticeTitle">
+        <div class="write-coldstart-notice__backdrop" data-coldstart-dismiss="1"></div>
+        <div class="write-coldstart-notice__panel">
+            <header class="write-coldstart-notice__header">
+                <div class="write-coldstart-notice__icon" aria-hidden="true">
+                    <i class="bi bi-snow2"></i>
+                </div>
+                <div class="write-coldstart-notice__title-block">
+                    <h2 id="writeColdStartNoticeTitle" class="write-coldstart-notice__title">Important: First Diary Analysis</h2>
+                </div>
+            </header>
+
+            <div class="write-coldstart-notice__callout" role="note">
+                <i class="bi bi-info-circle write-coldstart-notice__callout-icon" aria-hidden="true"></i>
+                <p class="write-coldstart-notice__callout-text">
+                    During your first diary analysis, the result modal may not appear even after the analysis reaches 100 percent. This is caused by the <strong>cold start</strong> of our emotion analysis service when it has not been used recently.
+                </p>
+            </div>
+
+            <p class="write-coldstart-notice__body-text">
+                Do not worry. Your diary is still analyzed and saved successfully. If the result modal does not appear, you may leave the page and go to <strong>Entries</strong>.
+            </p>
+
+            <p class="write-coldstart-notice__body-text">
+                To view the result of your first diary:
+            </p>
+
+            <ol class="write-coldstart-notice__steps">
+                <li>Go to <strong>Entries</strong>.</li>
+                <li>Find your first analyzed diary.</li>
+                <li>Click <strong>View Details</strong>.</li>
+                <li>The system will analyze the entry again and display its emotion results.</li>
+            </ol>
+
+            <p class="write-coldstart-notice__body-text">
+                Once the analysis service has started, results should appear normally in the result modal for subsequent diary entries.
+            </p>
+
+            <p class="write-coldstart-notice__footnote">
+                <i class="bi bi-info-circle" aria-hidden="true"></i>
+                Note: The first use cold start may happen again if the service becomes inactive. It may also depend on whether another user has recently used the system.
+            </p>
+
+            <footer class="write-coldstart-notice__footer">
+                <label class="write-coldstart-notice__dont-show">
+                    <input type="checkbox" id="writeColdStartDontShow" />
+                    <span>Don't show again</span>
+                </label>
+                <button type="button" class="write-coldstart-notice__ok" id="writeColdStartOkBtn">
+                    <i class="bi bi-hand-thumbs-up" aria-hidden="true"></i>
+                    Got it
+                </button>
+            </footer>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/side-bar.js"></script>
     <script src="/diari-security.js"></script>
