@@ -140,7 +140,7 @@ def architecture():
     ax.set_xlim(0, 10.2)
     ax.set_ylim(0, 6.8)
     ax.axis("off")
-    ax.set_title("DiariCore — current runtime architecture", fontsize=13, pad=8, loc="left")
+    ax.set_title("DiariCore — current runtime architecture", fontsize=13, pad=8, loc="center")
 
     box(ax, 0.25, 5.6, 2.2, 0.9, "User\nBrowser / Installed PWA", fc="#EEF4F1", bold=True)
     box(ax, 3.15, 5.6, 3.7, 0.9, "Railway web service\nFlask + Gunicorn  (diaricore.up.railway.app)", fc="#E8F0EC", bold=True)
@@ -175,7 +175,7 @@ def ml_pipeline():
     ax.set_xlim(0, 10.2)
     ax.set_ylim(0, 3.6)
     ax.axis("off")
-    ax.set_title("Emotion model workflow (training to inference)", fontsize=13, pad=6, loc="left")
+    ax.set_title("Emotion model workflow (training to inference)", fontsize=13, pad=6, loc="center")
     steps = [
         (0.15, "Dataset\n1,593 labeled\njournal texts"),
         (2.15, "Google Colab\nFine-tune\nXLM-RoBERTa-Base"),
@@ -197,7 +197,7 @@ def erd():
     ax.set_xlim(0, 11.2)
     ax.set_ylim(0, 7.8)
     ax.axis("off")
-    ax.set_title("Logical data model (simplified)", fontsize=13, pad=8, loc="left")
+    ax.set_title("Logical data model (simplified)", fontsize=13, pad=8, loc="center")
 
     def entity(x, y, w, h, title, fields):
         header_h = 0.4

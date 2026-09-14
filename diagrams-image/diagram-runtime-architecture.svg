@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-09-14T20:16:39.639682</dc:date>
+    <dc:date>2026-09-14T20:21:31.829973</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -40,7 +40,7 @@ Q 20.4804 40.631075 20.4804 45.066275
 L 20.4804 87.422435 
 Q 20.4804 91.857635 24.9444 91.857635 
 z
-" clip-path="url(#p75606a8780)" style="fill: #eef4f1; stroke: #3d5a4c; stroke-width: 1.15; stroke-linejoin: miter"/>
+" clip-path="url(#pee4755b087)" style="fill: #eef4f1; stroke: #3d5a4c; stroke-width: 1.15; stroke-linejoin: miter"/>
    </g>
    <g id="patch_3">
     <path d="M 186.7644 91.857635 
@@ -53,7 +53,7 @@ Q 182.3004 40.631075 182.3004 45.066275
 L 182.3004 87.422435 
 Q 182.3004 91.857635 186.7644 91.857635 
 z
-" clip-path="url(#p75606a8780)" style="fill: #e8f0ec; stroke: #3d5a4c; stroke-width: 1.15; stroke-linejoin: miter"/>
+" clip-path="url(#pee4755b087)" style="fill: #e8f0ec; stroke: #3d5a4c; stroke-width: 1.15; stroke-linejoin: miter"/>
    </g>
    <g id="patch_4">
     <path d="M 423.9144 91.857635 
@@ -66,7 +66,7 @@ Q 419.4504 40.631075 419.4504 45.066275
 L 419.4504 87.422435 
 Q 419.4504 91.857635 423.9144 91.857635 
 z
-" clip-path="url(#p75606a8780)" style="fill: #f4f1ea; stroke: #3d5a4c; stroke-width: 1.15; stroke-linejoin: miter"/>
+" clip-path="url(#pee4755b087)" style="fill: #f4f1ea; stroke: #3d5a4c; stroke-width: 1.15; stroke-linejoin: miter"/>
    </g>
    <g id="patch_5">
     <path d="M 24.9444 180.561635 
@@ -79,7 +79,7 @@ Q 20.4804 123.791075 20.4804 128.226275
 L 20.4804 176.126435 
 Q 20.4804 180.561635 24.9444 180.561635 
 z
-" clip-path="url(#p75606a8780)" style="fill: #f7faf8; stroke: #3d5a4c; stroke-width: 1.15; stroke-linejoin: miter"/>
+" clip-path="url(#pee4755b087)" style="fill: #f7faf8; stroke: #3d5a4c; stroke-width: 1.15; stroke-linejoin: miter"/>
    </g>
    <g id="patch_6">
     <path d="M 186.7644 188.877635 
@@ -92,7 +92,7 @@ Q 182.3004 115.475075 182.3004 119.910275
 L 182.3004 184.442435 
 Q 182.3004 188.877635 186.7644 188.877635 
 z
-" clip-path="url(#p75606a8780)" style="fill: #f7faf8; stroke: #3d5a4c; stroke-width: 1.15; stroke-linejoin: miter"/>
+" clip-path="url(#pee4755b087)" style="fill: #f7faf8; stroke: #3d5a4c; stroke-width: 1.15; stroke-linejoin: miter"/>
    </g>
    <g id="patch_7">
     <path d="M 423.9144 180.561635 
@@ -105,7 +105,7 @@ Q 419.4504 123.791075 419.4504 128.226275
 L 419.4504 176.126435 
 Q 419.4504 180.561635 423.9144 180.561635 
 z
-" clip-path="url(#p75606a8780)" style="fill: #f4f1ea; stroke: #3d5a4c; stroke-width: 1.15; stroke-linejoin: miter"/>
+" clip-path="url(#pee4755b087)" style="fill: #f4f1ea; stroke: #3d5a4c; stroke-width: 1.15; stroke-linejoin: miter"/>
    </g>
    <g id="patch_8">
     <path d="M 24.9444 280.353635 
@@ -118,7 +118,7 @@ Q 20.4804 212.495075 20.4804 216.930275
 L 20.4804 275.918435 
 Q 20.4804 280.353635 24.9444 280.353635 
 z
-" clip-path="url(#p75606a8780)" style="fill: #ede9f6; stroke: #5b4b8a; stroke-width: 1.15; stroke-linejoin: miter"/>
+" clip-path="url(#pee4755b087)" style="fill: #ede9f6; stroke: #5b4b8a; stroke-width: 1.15; stroke-linejoin: miter"/>
    </g>
    <g id="patch_9">
     <path d="M 172.8144 280.353635 
@@ -131,7 +131,7 @@ Q 168.3504 212.495075 168.3504 216.930275
 L 168.3504 275.918435 
 Q 168.3504 280.353635 172.8144 280.353635 
 z
-" clip-path="url(#p75606a8780)" style="fill: #ede9f6; stroke: #5b4b8a; stroke-width: 1.15; stroke-linejoin: miter"/>
+" clip-path="url(#pee4755b087)" style="fill: #ede9f6; stroke: #5b4b8a; stroke-width: 1.15; stroke-linejoin: miter"/>
    </g>
    <g id="patch_10">
     <path d="M 320.6844 280.353635 
@@ -144,7 +144,7 @@ Q 316.2204 212.495075 316.2204 216.930275
 L 316.2204 275.918435 
 Q 316.2204 280.353635 320.6844 280.353635 
 z
-" clip-path="url(#p75606a8780)" style="fill: #f8eee8; stroke: #a86b4a; stroke-width: 1.15; stroke-linejoin: miter"/>
+" clip-path="url(#pee4755b087)" style="fill: #f8eee8; stroke: #a86b4a; stroke-width: 1.15; stroke-linejoin: miter"/>
    </g>
    <g id="patch_11">
     <path d="M 451.8144 280.353635 
@@ -157,7 +157,7 @@ Q 447.3504 212.495075 447.3504 216.930275
 L 447.3504 275.918435 
 Q 447.3504 280.353635 451.8144 280.353635 
 z
-" clip-path="url(#p75606a8780)" style="fill: #ede9f6; stroke: #5b4b8a; stroke-width: 1.15; stroke-linejoin: miter"/>
+" clip-path="url(#pee4755b087)" style="fill: #ede9f6; stroke: #5b4b8a; stroke-width: 1.15; stroke-linejoin: miter"/>
    </g>
    <g id="patch_12">
     <path d="M 24.9444 382.917635 
@@ -170,7 +170,7 @@ Q 20.4804 315.059075 20.4804 319.494275
 L 20.4804 378.482435 
 Q 20.4804 382.917635 24.9444 382.917635 
 z
-" clip-path="url(#p75606a8780)" style="fill: #eef2f7; stroke: #4a6278; stroke-width: 1.15; stroke-linejoin: miter"/>
+" clip-path="url(#pee4755b087)" style="fill: #eef2f7; stroke: #4a6278; stroke-width: 1.15; stroke-linejoin: miter"/>
    </g>
    <g id="patch_13">
     <path d="M 223.0344 382.917635 
@@ -183,7 +183,7 @@ Q 218.5704 315.059075 218.5704 319.494275
 L 218.5704 378.482435 
 Q 218.5704 382.917635 223.0344 382.917635 
 z
-" clip-path="url(#p75606a8780)" style="fill: #eef2f7; stroke: #4a6278; stroke-width: 1.15; stroke-linejoin: miter"/>
+" clip-path="url(#pee4755b087)" style="fill: #eef2f7; stroke: #4a6278; stroke-width: 1.15; stroke-linejoin: miter"/>
    </g>
    <g id="patch_14">
     <path d="M 409.9644 382.917635 
@@ -196,10 +196,10 @@ Q 405.5004 315.059075 405.5004 319.494275
 L 405.5004 378.482435 
 Q 405.5004 382.917635 409.9644 382.917635 
 z
-" clip-path="url(#p75606a8780)" style="fill: #eef2f7; stroke: #4a6278; stroke-width: 1.15; stroke-linejoin: miter"/>
+" clip-path="url(#pee4755b087)" style="fill: #eef2f7; stroke: #4a6278; stroke-width: 1.15; stroke-linejoin: miter"/>
    </g>
    <g id="text_1">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- User -->
      <g style="fill: #1a202c" transform="translate(73.413266 62.268026) scale(0.082 -0.082)">
       <defs>
@@ -304,7 +304,7 @@ z
     </g>
    </g>
    <g id="text_2">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Browser / Installed PWA -->
      <g style="fill: #1a202c" transform="translate(35.597813 74.464826) scale(0.082 -0.082)">
       <defs>
@@ -605,7 +605,7 @@ z
     </g>
    </g>
    <g id="text_3">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Railway web service -->
      <g style="fill: #1a202c" transform="translate(246.545953 62.267946) scale(0.082 -0.082)">
       <defs>
@@ -756,7 +756,7 @@ z
     </g>
    </g>
    <g id="text_4">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Flask + Gunicorn  (diaricore.up.railway.app) -->
      <g style="fill: #1a202c" transform="translate(201.184578 74.464746) scale(0.082 -0.082)">
       <defs>
@@ -963,7 +963,7 @@ z
     </g>
    </g>
    <g id="text_5">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Railway Postgres -->
      <g style="fill: #1a202c" transform="translate(455.918797 62.267946) scale(0.082 -0.082)">
       <defs>
@@ -1024,7 +1024,7 @@ z
     </g>
    </g>
    <g id="text_6">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- journal, users, auth -->
      <g style="fill: #1a202c" transform="translate(452.053906 74.464746) scale(0.082 -0.082)">
       <defs>
@@ -1111,7 +1111,7 @@ z
     </g>
    </g>
    <g id="text_7">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Static assets -->
      <g style="fill: #1a202c" transform="translate(59.288125 142.101626) scale(0.082 -0.082)">
       <defs>
@@ -1333,7 +1333,7 @@ z
     </g>
    </g>
    <g id="text_8">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Service worker cache -->
      <g style="fill: #1a202c" transform="translate(43.339766 154.298426) scale(0.082 -0.082)">
       <defs>
@@ -1468,7 +1468,7 @@ z
     </g>
    </g>
    <g id="text_9">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Web App Manifest -->
      <g style="fill: #1a202c" transform="translate(49.333453 166.495226) scale(0.082 -0.082)">
       <defs>
@@ -1648,7 +1648,7 @@ z
     </g>
    </g>
    <g id="text_10">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Application modules -->
      <g style="fill: #1a202c" transform="translate(249.508203 142.101626) scale(0.082 -0.082)">
       <defs>
@@ -1763,7 +1763,7 @@ z
     </g>
    </g>
    <g id="text_11">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Auth, journal CRUD, uploads, -->
      <g style="fill: #1a202c" transform="translate(232.420172 154.298346) scale(0.082 -0.082)">
       <defs>
@@ -1935,7 +1935,7 @@ z
     </g>
    </g>
    <g id="text_12">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- insights APIs, push dispatcher -->
      <g style="fill: #1a202c" transform="translate(231.505359 166.495146) scale(0.082 -0.082)">
       <defs>
@@ -2039,7 +2039,7 @@ z
     </g>
    </g>
    <g id="text_13">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Persistent volume -->
      <g style="fill: #1a202c" transform="translate(457.285891 148.200026) scale(0.082 -0.082)">
       <use xlink:href="#ArialMT-33"/>
@@ -2063,7 +2063,7 @@ z
     </g>
    </g>
    <g id="text_14">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- /data/uploads -->
      <g style="fill: #1a202c" transform="translate(465.252063 160.396826) scale(0.082 -0.082)">
       <defs>
@@ -2092,7 +2092,7 @@ z
     </g>
    </g>
    <g id="text_15">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Hugging Face Space -->
      <g style="fill: #1a202c" transform="translate(46.392781 236.349546) scale(0.082 -0.082)">
       <defs>
@@ -2167,7 +2167,7 @@ z
     </g>
    </g>
    <g id="text_16">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- ONNX inference -->
      <g style="fill: #1a202c" transform="translate(55.501828 248.546426) scale(0.082 -0.082)">
       <defs>
@@ -2263,7 +2263,7 @@ z
     </g>
    </g>
    <g id="text_17">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- POST /predict -->
      <g style="fill: #1a202c" transform="translate(59.605672 260.743226) scale(0.082 -0.082)">
       <defs>
@@ -2296,7 +2296,7 @@ z
     </g>
    </g>
    <g id="text_18">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Hugging Face Hub -->
      <g style="fill: #1a202c" transform="translate(200.399969 236.349546) scale(0.082 -0.082)">
       <defs>
@@ -2349,7 +2349,7 @@ z
     </g>
    </g>
    <g id="text_19">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Fine-tuned XLM-RoBERTa -->
      <g style="fill: #1a202c" transform="translate(186.124281 248.546426) scale(0.082 -0.082)">
       <defs>
@@ -2481,7 +2481,7 @@ z
     </g>
    </g>
    <g id="text_20">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- ONNX + tokenizer -->
      <g style="fill: #1a202c" transform="translate(201.431375 260.745548) scale(0.082 -0.082)">
       <defs>
@@ -2575,7 +2575,7 @@ z
     </g>
    </g>
    <g id="text_21">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Brevo -->
      <g style="fill: #1a202c" transform="translate(364.770031 236.349626) scale(0.082 -0.082)">
       <use xlink:href="#ArialMT-25"/>
@@ -2587,7 +2587,7 @@ z
     </g>
    </g>
    <g id="text_22">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Transactional email -->
      <g style="fill: #1a202c" transform="translate(340.085469 248.546426) scale(0.082 -0.082)">
       <use xlink:href="#ArialMT-37"/>
@@ -2613,7 +2613,7 @@ z
     </g>
    </g>
    <g id="text_23">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- OTP / reset / recovery -->
      <g style="fill: #1a202c" transform="translate(335.457594 260.745468) scale(0.082 -0.082)">
       <defs>
@@ -2665,7 +2665,7 @@ z
     </g>
    </g>
    <g id="text_24">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- HF Inference -->
      <g style="fill: #1a202c" transform="translate(480.122641 236.349626) scale(0.082 -0.082)">
       <use xlink:href="#ArialMT-2b"/>
@@ -2684,7 +2684,7 @@ z
     </g>
    </g>
    <g id="text_25">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Whisper ASR -->
      <g style="fill: #1a202c" transform="translate(479.440375 248.546426) scale(0.082 -0.082)">
       <use xlink:href="#ArialMT-3a"/>
@@ -2702,7 +2702,7 @@ z
     </g>
    </g>
    <g id="text_26">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- (voice fallback) -->
      <g style="fill: #1a202c" transform="translate(476.478766 260.743146) scale(0.082 -0.082)">
       <defs>
@@ -2753,7 +2753,7 @@ z
     </g>
    </g>
    <g id="text_27">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Google Authenticator (user device) -->
      <g style="fill: #1a202c" transform="translate(50.094734 345.011946) scale(0.082 -0.082)">
       <defs>
@@ -2828,7 +2828,7 @@ z
     </g>
    </g>
    <g id="text_28">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- TOTP codes for optional 2FA -->
      <g style="fill: #1a202c" transform="translate(60.502328 357.211148) scale(0.082 -0.082)">
       <defs>
@@ -2889,7 +2889,7 @@ z
     </g>
    </g>
    <g id="text_29">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Optional cron-job.org -->
      <g style="fill: #1a202c" transform="translate(267.445609 338.915868) scale(0.082 -0.082)">
       <defs>
@@ -2926,7 +2926,7 @@ z
     </g>
    </g>
    <g id="text_30">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- POST /api/internal/push/dispatch -->
      <g style="fill: #1a202c" transform="translate(245.869359 351.112748) scale(0.082 -0.082)">
       <use xlink:href="#ArialMT-33"/>
@@ -2965,7 +2965,7 @@ z
     </g>
    </g>
    <g id="text_31">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- if internal scheduler is disabled -->
      <g style="fill: #1a202c" transform="translate(249.668906 363.307226) scale(0.082 -0.082)">
       <use xlink:href="#ArialMT-4c"/>
@@ -3005,7 +3005,7 @@ z
     </g>
    </g>
    <g id="text_32">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Web Push (VAPID) -->
      <g style="fill: #1a202c" transform="translate(448.185938 345.011946) scale(0.082 -0.082)">
       <defs>
@@ -3042,7 +3042,7 @@ z
     </g>
    </g>
    <g id="text_33">
-    <g clip-path="url(#p75606a8780)">
+    <g clip-path="url(#pee4755b087)">
      <!-- Installed PWA devices -->
      <g style="fill: #1a202c" transform="translate(442.484375 357.208826) scale(0.082 -0.082)">
       <use xlink:href="#ArialMT-2c"/>
@@ -3151,7 +3151,7 @@ z
    </g>
    <g id="text_34">
     <!-- DiariCore — current runtime architecture -->
-    <g style="fill: #1a202c" transform="translate(7.2 16.664355) scale(0.13 -0.13)">
+    <g style="fill: #1a202c" transform="translate(174.749531 16.664355) scale(0.13 -0.13)">
      <defs>
       <path id="ArialMT-b2" d="M 0 1431 
 L 0 1884 
@@ -3206,7 +3206,7 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="p75606a8780">
+  <clipPath id="pee4755b087">
    <rect x="7.2" y="24.664355" width="569.16" height="376.992"/>
   </clipPath>
  </defs>
