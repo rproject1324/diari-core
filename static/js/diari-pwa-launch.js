@@ -343,7 +343,11 @@
         } finally {
             g.clearTimeout(failSafe);
             animDone = true;
+            appReady = true;
             tryRevealApp();
+            if (g.DiariShell && typeof g.DiariShell._completeRelease === 'function') {
+                g.DiariShell._completeRelease();
+            }
         }
     }
 
