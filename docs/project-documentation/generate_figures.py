@@ -305,9 +305,42 @@ def erd():
     save(fig, "diagram-erd.png", "diagram-logical-data-model.svg")
 
 
+def integrated_service_map():
+    fig, ax = plt.subplots(figsize=(11.0, 5.8))
+    ax.set_xlim(0, 11.0)
+    ax.set_ylim(0, 5.8)
+    ax.axis("off")
+    ax.set_title("Integrated service map", fontsize=13, pad=8, loc="center")
+
+    box(ax, 0.1, 4.4, 2.0, 0.9, "Dataset\n(text, label,\nlanguage)", fc="#F3F7F5", fs=7.5)
+    box(ax, 2.5, 4.4, 2.2, 0.9, "Google Colab\nFine-tune\nXLM-RoBERTa-Base", fc="#F3F7F5", fs=7.5)
+    box(ax, 5.1, 4.4, 2.2, 0.9, "Hugging Face Hub\ntokenizer + ONNX/\nPyTorch artifacts", fc="#EDE9F6", ec="#5B4B8A", fs=7.5)
+    box(ax, 7.7, 4.4, 2.2, 0.9, "Hugging Face Space\nFastAPI /predict\nONNX Runtime", fc="#EDE9F6", ec="#5B4B8A", fs=7.5)
+
+    arrow(ax, 2.1, 4.85, 2.5, 4.85)
+    arrow(ax, 4.7, 4.85, 5.1, 4.85)
+    arrow(ax, 7.3, 4.85, 7.7, 4.85)
+
+    box(ax, 3.5, 2.7, 3.2, 0.9, "Railway Flask app\nsave / re-analyze\njournal text", fc="#E8F0EC", bold=True, fs=7.5)
+    arrow(ax, 8.8, 4.4, 5.1, 3.6)
+
+    box(ax, 0.3, 1.0, 2.5, 0.85, "PostgreSQL\n(users, entries,\nauth, push)", fc="#F4F1EA", fs=7.5)
+    box(ax, 3.2, 1.0, 2.3, 0.85, "Brevo\n(email OTP, reset,\nTOTP recovery)", fc="#F8EEE8", ec="#A86B4A", fs=7.5)
+    box(ax, 5.9, 1.0, 2.2, 0.85, "Web Push\n(VAPID to\ninstalled PWA)", fc="#EEF2F7", ec="#4A6278", fs=7.5)
+    box(ax, 8.5, 1.0, 2.2, 0.85, "Optional\ncron-job.org\n(if dispatcher off)", fc="#EEF2F7", ec="#4A6278", fs=7.5)
+
+    arrow(ax, 4.2, 2.7, 1.55, 1.85)
+    arrow(ax, 4.8, 2.7, 4.35, 1.85)
+    arrow(ax, 5.5, 2.7, 7.0, 1.85)
+    arrow(ax, 6.2, 2.7, 9.6, 1.85)
+
+    save(fig, "diagram-integrated-service-map.png", "diagram-integrated-service-map.svg")
+
+
 if __name__ == "__main__":
     dataset_charts()
     architecture()
     ml_pipeline()
     erd()
+    integrated_service_map()
     print("done")
