@@ -217,6 +217,16 @@
         loading.className = 'diari-pwa-launch__loading';
         loading.id = 'diariPwaLaunchLoading';
 
+        const fallbackBar = g.document.createElement('div');
+        fallbackBar.className = 'diari-pwa-launch__fallback-bar';
+        const fallbackTrack = g.document.createElement('div');
+        fallbackTrack.className = 'diari-pwa-launch__fallback-track';
+        const fallbackFill = g.document.createElement('div');
+        fallbackFill.className = 'diari-pwa-launch__fallback-fill';
+        fallbackTrack.appendChild(fallbackFill);
+        fallbackBar.appendChild(fallbackTrack);
+        loading.appendChild(fallbackBar);
+
         const explosionWrap = g.document.createElement('div');
         explosionWrap.className = 'diari-pwa-launch__explosion-wrap diari-pwa-launch--hidden';
         explosionWrap.id = 'diariPwaLaunchExplosionWrap';
@@ -298,6 +308,8 @@
         try {
             await loadScript('lottie-web.min.js');
             const loadingData = await fetchAnimation(LOADING_SRC);
+            var fallbackBar = loadingMount.querySelector('.diari-pwa-launch__fallback-bar');
+            if (fallbackBar) fallbackBar.style.display = 'none';
             const loadingAnim = playLottie(loadingMount, loadingData, false);
             await waitForComplete(loadingAnim);
             try {

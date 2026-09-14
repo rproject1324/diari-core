@@ -152,3 +152,38 @@ html.diari-pwa-launch-active .main-content {
 .diari-pwa-launch--hidden {
     display: none !important;
 }
+
+/* Fallback CSS loading bar — visible immediately without Lottie. */
+.diari-pwa-launch__fallback-bar {
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    transform: translate(-50%, -50%);
+    width: min(78vw, 380px);
+}
+
+.diari-pwa-launch__fallback-track {
+    width: 100%;
+    height: 14px;
+    border-radius: 999px;
+    background: #e8ece9;
+    overflow: hidden;
+}
+
+html.theme-dark .diari-pwa-launch__fallback-track {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.diari-pwa-launch__fallback-fill {
+    width: 30%;
+    height: 100%;
+    border-radius: 999px;
+    background: #8da399;
+    animation: diari-pwa-fallback-slide 1.6s ease-in-out infinite;
+}
+
+@keyframes diari-pwa-fallback-slide {
+    0%   { transform: translateX(-100%); }
+    50%  { transform: translateX(200%); }
+    100% { transform: translateX(-100%); }
+}
