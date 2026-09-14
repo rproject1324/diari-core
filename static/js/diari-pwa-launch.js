@@ -9,9 +9,9 @@
     /** Transparent artwork only — no sage-green PWA icon box. */
     const LOGO_SRC = '/diariclogo.png';
     const SESSION_KEY = 'diariPwaLaunchDone';
-    const MAX_WAIT_MS = 14000;
+    const MAX_WAIT_MS = 8000;
     const BRAND_SHOW_AT_PROGRESS = 0.38;
-    const BRAND_HOLD_MS = 2500;
+    const BRAND_HOLD_MS = 1500;
 
     let finished = true;
     let finishWaiters = [];
@@ -200,7 +200,7 @@
                 resolve();
             }
             anim.addEventListener('complete', done);
-            g.setTimeout(resolve, 9000);
+            g.setTimeout(resolve, 5000);
         });
     }
 

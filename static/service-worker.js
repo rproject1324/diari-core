@@ -2,7 +2,7 @@
  * DiariCore PWA service worker — offline app shell + cached static assets.
  * API routes are never cached (session/auth stay fresh).
  */
-const CACHE_NAME = 'diaricore-pwa-v140';
+const CACHE_NAME = 'diaricore-pwa-v141';
 const PWA_PUSH_NOTIF_ICON = '/diariclogo-pwa-notif-192.png';
 const PWA_PUSH_NOTIF_BADGE = '/diariclogo.png';
 const PWA_CACHE_PREFIX = 'diaricore-pwa-';
@@ -329,23 +329,39 @@ self.addEventListener('fetch', (event) => {
                     (url.searchParams.get('pwa_fast') === '1'
                         ? await caches.match('/dashboard.html')
                         : null);
-                const network = fetch(request)
-                    .then((res) => {
-                        if (res.ok) {
-                            const copy = res.clone();
-                            caches.open(CACHE_NAME).then((c) => c.put(request, copy));
-                        }
-                        return res;
-                    })
-                    .catch(async () => {
-                        if (cached) return cached;
-                        const fallback =
-                            (await caches.match('/dashboard.html')) ||
-                            (await caches.match('/login.html'));
-                        return fallback || Response.error();
-                    });
-                /* Serve the app shell from cache first so notification taps paint immediately. */
-                return cached || network;
+
+                /* Cache hit: return immediately, refresh in background. */
+                if (cached) {
+                    fetch(request)
+                        .then((res) => {
+                            if (res.ok) {
+                                const copy = res.clone();
+                                caches.open(CACHE_NAME).then((c) => c.put(request, copy));
+                            }
+                        })
+                        .catch(() => {});
+                    return cached;
+                }
+
+                /* Cache miss: try network with a short timeout so the user
+                   is never stuck waiting on a slow/mobile connection. */
+                try {
+                    const controller = new AbortController();
+                    const tid = setTimeout(() => controller.abort(), 4000);
+                    const res = await fetch(request, { signal: controller.signal });
+                    clearTimeout(tid);
+                    if (res.ok) {
+                        const copy = res.clone();
+                        caches.open(CACHE_NAME).then((c) => c.put(request, copy));
+                    }
+                    return res;
+                } catch (_) {
+                    /* Network failed or timed out — serve a precached shell. */
+                    const shell =
+                        (await caches.match('/dashboard.html')) ||
+                        (await caches.match('/login.html'));
+                    return shell || new Response('Offline', { status: 503 });
+                }
             })()
         );
         return;
@@ -364,16 +380,33 @@ self.addEventListener('fetch', (event) => {
                     (await caches.match(path)) ||
                     (await caches.match(request)) ||
                     (await caches.match('/' + path.split('/').pop()));
-                const networkJsCss = fetch(request)
-                    .then((res) => {
-                        if (res.ok) {
-                            const copy = res.clone();
-                            caches.open(CACHE_NAME).then((c) => c.put(path, copy));
-                        }
-                        return res;
-                    })
-                    .catch(() => cachedJsCss || Response.error());
-                return cachedJsCss || networkJsCss;
+
+                if (cachedJsCss) {
+                    fetch(request)
+                        .then((res) => {
+                            if (res.ok) {
+                                const copy = res.clone();
+                                caches.open(CACHE_NAME).then((c) => c.put(path, copy));
+                            }
+                        })
+                        .catch(() => {});
+                    return cachedJsCss;
+                }
+
+                /* No cache: try network with timeout, then error. */
+                try {
+                    const controller = new AbortController();
+                    const tid = setTimeout(() => controller.abort(), 5000);
+                    const res = await fetch(request, { signal: controller.signal });
+                    clearTimeout(tid);
+                    if (res.ok) {
+                        const copy = res.clone();
+                        caches.open(CACHE_NAME).then((c) => c.put(path, copy));
+                    }
+                    return res;
+                } catch (_) {
+                    return new Response('', { status: 504 });
+                }
             }
 
             /* ── Cache-first (images, fonts, other static) ── */
