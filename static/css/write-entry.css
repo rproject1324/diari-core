@@ -219,8 +219,9 @@
 .tag-btn.selected,
 .tag-btn.selected:hover {
     border-color: var(--primary-color) !important;
-    background-color: var(--primary-color) !important;
+    background-color: color-mix(in srgb, var(--primary-color) 55%, #1c262b) !important;
     color: #fff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45) !important;
 }
 
 .tag-btn.selected i,
@@ -230,18 +231,25 @@
 .tag-btn.selected:hover span,
 .tag-btn.selected:hover .tag-btn__icon-svg {
     color: #fff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45) !important;
 }
 
-html.theme-dark body.page-write-entry .tag-btn.selected {
-    background-color: var(--primary-color) !important;
+html.theme-dark body.page-write-entry .tag-btn.selected,
+html.theme-dark body.page-write-entry .tag-btn.selected:hover {
+    background-color: color-mix(in srgb, var(--primary-color) 55%, #1c262b) !important;
     border-color: var(--primary-color) !important;
     color: #fff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45) !important;
 }
 
 html.theme-dark body.page-write-entry .tag-btn.selected i,
 html.theme-dark body.page-write-entry .tag-btn.selected span,
-html.theme-dark body.page-write-entry .tag-btn.selected .tag-btn__icon-svg {
+html.theme-dark body.page-write-entry .tag-btn.selected .tag-btn__icon-svg,
+html.theme-dark body.page-write-entry .tag-btn.selected:hover i,
+html.theme-dark body.page-write-entry .tag-btn.selected:hover span,
+html.theme-dark body.page-write-entry .tag-btn.selected:hover .tag-btn__icon-svg {
     color: #fff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45) !important;
 }
 
 .tag-btn.add-tag {
