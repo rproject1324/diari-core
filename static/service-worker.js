@@ -2,7 +2,7 @@
  * DiariCore PWA service worker — offline app shell + cached static assets.
  * API routes are never cached (session/auth stay fresh).
  */
-const CACHE_NAME = 'diaricore-pwa-v145';
+const CACHE_NAME = 'diaricore-pwa-v147';
 const PWA_PUSH_NOTIF_ICON = '/diariclogo-pwa-notif-192.png';
 const PWA_PUSH_NOTIF_BADGE = '/diariclogo.png';
 const PWA_CACHE_PREFIX = 'diaricore-pwa-';
@@ -103,10 +103,31 @@ self.addEventListener('push', (event) => {
         (async () => {
             let shown = false;
             try {
+                /* Retried/recurring tags (daily, streak) reuse one tag so the tray
+                   never stacks duplicates. Close any lingering notification first —
+                   otherwise replacing it happens SILENTLY (no buzz/heads-up) and
+                   the user perceives "it never arrived". */
+                const reAlertTags = ['diari-daily-reminder', 'diari-streak-reminder'];
+                const needsReAlert = reAlertTags.indexOf(notifTag) !== -1;
+                if (needsReAlert) {
+                    try {
+                        const lingering =
+                            (await self.registration.getNotifications({ tag: notifTag })) || [];
+                        lingering.forEach((n) => {
+                            try {
+                                n.close();
+                            } catch (_) {
+                                /* ignore */
+                            }
+                        });
+                    } catch (_) {
+                        /* ignore */
+                    }
+                }
                 const notifOpts = {
                     body,
                     tag: notifTag,
-                    renotify: notifTag !== 'diari-daily-reminder',
+                    renotify: true,
                     requireInteraction: false,
                     silent: false,
                     icon: PWA_PUSH_NOTIF_ICON,
