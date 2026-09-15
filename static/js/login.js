@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let pendingTwoFactorToken = null;
     let loginTotpVerifyInProgress = false;
     let loginTotpAutoVerifyTimeout = null;
+    let loginRecoveryAutoVerifyTimeout = null;
     const LOGIN_TOTP_VERIFY_MIN_MS = 3000;
 
     const signinMainFlow = document.getElementById('signinMainFlow');
@@ -201,6 +202,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function clearLoginRecoveryDigits() {
+        if (loginRecoveryAutoVerifyTimeout) {
+            clearTimeout(loginRecoveryAutoVerifyTimeout);
+            loginRecoveryAutoVerifyTimeout = null;
+        }
         loginRecoveryDigits.forEach(function (d) {
             d.value = '';
             d.classList.remove('error');
@@ -545,6 +550,16 @@ document.addEventListener('DOMContentLoaded', function() {
             loginTotpAutoVerifyTimeout = null;
             if (getLoginTotpCode().length === 6) {
                 submitLoginTotpVerification(true);
+            }
+        }, 240);
+    }
+
+    function scheduleLoginRecoveryAutoVerify() {
+        if (loginRecoveryAutoVerifyTimeout) clearTimeout(loginRecoveryAutoVerifyTimeout);
+        loginRecoveryAutoVerifyTimeout = setTimeout(function () {
+            loginRecoveryAutoVerifyTimeout = null;
+            if (getLoginRecoveryCode().length === 6 && !loginRecoveryVerifyInProgress) {
+                submitLoginRecoveryVerification();
             }
         }, 240);
     }
@@ -1412,6 +1427,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (v && idx < loginRecoveryDigits.length - 1) {
                     loginRecoveryDigits[idx + 1].focus();
                 }
+                if (getLoginRecoveryCode().length === 6) {
+                    scheduleLoginRecoveryAutoVerify();
+                }
             });
             input.addEventListener('keydown', function (e) {
                 if (e.key === 'Backspace' && !input.value && idx > 0) {
@@ -1431,6 +1449,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearLoginRecoveryErrorState();
                 var next = digits.length >= 6 ? 5 : digits.length;
                 if (loginRecoveryDigits[next]) loginRecoveryDigits[next].focus();
+                if (getLoginRecoveryCode().length === 6) {
+                    scheduleLoginRecoveryAutoVerify();
+                }
             });
         });
     }
