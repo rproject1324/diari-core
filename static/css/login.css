@@ -1379,11 +1379,11 @@ html.theme-dark .lockout-countdown {
 }
 
 .login-reset-step__header {
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
 
 .login-reset-step__form {
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.25rem;
 }
 
 .login-reset-step .login-form .btn-signin {
@@ -1392,7 +1392,7 @@ html.theme-dark .lockout-countdown {
 
 .login-reset-step .login-form:has(.pwd-live[hidden]) .btn-signin,
 .login-reset-step .login-form:has(.pwd-live:not([hidden])) .btn-signin {
-    margin-top: 0.25rem;
+    margin-top: 0.15rem;
 }
 
 .login-reset-step .pwd-live {
@@ -1404,20 +1404,24 @@ html.theme-dark .lockout-countdown {
 }
 
 .login-reset-step .form-group--pwd-full:has(.pwd-live[hidden]) {
-    margin-bottom: 0;
-    min-height: 0;
-    max-height: 0;
-    overflow: hidden;
-    padding: 0;
-    opacity: 0;
+    margin: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    opacity: 0 !important;
 }
 
 .login-reset-step .form-group--pwd-full:has(.pwd-live:not([hidden])) {
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.25rem !important;
 }
 
 .login-reset-step .login-form .form-group {
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.15rem !important;
+}
+
+.login-reset-step .login-form .form-group:last-of-type {
+    margin-bottom: 0 !important;
 }
 
 .login-reset-step__meta {
