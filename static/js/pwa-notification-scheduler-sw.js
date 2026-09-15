@@ -148,57 +148,6 @@ async function showLocalNotification(registration, title, body, tag, url) {
     }
 }
 
-/**
- * Local-first daily reminder: when the app is open this fires on time even if
- * the server push is delayed by FCM/Doze. Uses the SAME tag as the server push
- * so a late server arrival silently replaces it instead of stacking a duplicate.
- * Posts a delivery-ack so the server stops retrying.
- */
-async function showLocalDailyReminder(registration, body) {
-    if (!registration || typeof registration.showNotification !== 'function') return false;
-    const tag = 'diari-daily-reminder';
-    try {
-        let existing = [];
-        try {
-            existing = (await registration.getNotifications({ tag })) || [];
-        } catch (_) {
-            existing = [];
-        }
-        if (existing.length) {
-            // Server push already showing — adopt it (no re-buzz), just ack below.
-        } else {
-            await registration.showNotification('A gentle journal nudge', {
-                body,
-                tag,
-                renotify: true,
-                icon: '/diariclogo-pwa-notif-192.png',
-                badge: '/diariclogo.png',
-                vibrate: [300, 100, 300, 100, 300],
-                data: { url: '/dashboard.html', tag },
-            });
-        }
-    } catch (e) {
-        console.warn('[PWA SW] local daily showNotification failed:', e);
-        return false;
-    }
-    try {
-        fetch('/api/push/delivery-ack', {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                tag,
-                title: 'A gentle journal nudge',
-                receivedAt: new Date().toISOString(),
-                source: 'local',
-            }),
-        }).catch(() => {});
-    } catch (_) {
-        /* ignore */
-    }
-    return true;
-}
-
 async function runNotificationChecks() {
     const idb = self.DiariPwaNotificationIdb;
     const tpl = self.DiariPwaNotificationTemplates;
@@ -221,20 +170,23 @@ async function runNotificationChecks() {
     const entries = Array.isArray(prefs.entries) ? prefs.entries : [];
     const reminder = parseHHmm(prefs.reminderHHmm || '09:00');
 
-  // Local-first: when the app is open this fires on time even if the server
-  // push is delayed by FCM/Doze. Same tag as the server push, so a late
-  // server arrival silently replaces it instead of stacking a duplicate.
+  // When true Web Push is registered, daily reminders come from the server only
+  // (local checks only run while the app is open and were masking closed-app failures).
     if (
         prefs.dailyRemindersEnabled &&
+        !prefs.webPushActive &&
         reminder &&
         isInReminderWindow(h, m, reminder.h, reminder.m, REMINDER_WINDOW_MINUTES) &&
         prefs.lastDailyReminderDateKey !== todayKey &&
         !hasEntryToday(entries)
     ) {
         const body = tpl.buildDailyReminderBody();
-        const ok = await showLocalDailyReminder(
+        const ok = await showLocalNotification(
             registration,
-            body
+            'A gentle journal nudge',
+            body,
+            CHECK_TAG_DAILY,
+            '/dashboard.html'
         );
         if (ok) {
             prefs.lastDailyReminderDateKey = todayKey;
