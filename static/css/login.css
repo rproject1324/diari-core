@@ -973,7 +973,7 @@ html.theme-dark .lockout-countdown {
         position: absolute;
         inset: 0;
         width: 100%;
-        height: auto;
+        height: 100%;
         z-index: 0;
         pointer-events: none;
         background-color: #ffffff;
@@ -1389,8 +1389,27 @@ html.theme-dark .lockout-countdown {
     margin-bottom: 0.75rem;
 }
 
+.login-reset-step .login-form:has(.pwd-live[hidden]) .btn-signin,
+.login-reset-step .login-form:has(.pwd-live:not([hidden])) .btn-signin {
+    margin-top: 0.75rem;
+}
+
 .login-reset-step .pwd-live {
     max-width: 100%;
+}
+
+.login-reset-step .pwd-live[hidden] {
+    display: none;
+}
+
+.login-reset-step .form-group--pwd-full:has(.pwd-live[hidden]) {
+    margin-bottom: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.login-reset-step .form-group--pwd-full:has(.pwd-live:not([hidden])) {
+    margin-bottom: 0.5rem;
 }
 
 .login-reset-step__meta {
