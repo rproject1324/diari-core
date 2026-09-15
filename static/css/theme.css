@@ -126,6 +126,24 @@ html.theme-dark .search-input {
     border-color: var(--border-color) !important;
 }
 
+html.theme-dark input:-webkit-autofill,
+html.theme-dark input:-webkit-autofill:hover,
+html.theme-dark input:-webkit-autofill:focus,
+html.theme-dark input:-webkit-autofill:active,
+html.theme-dark textarea:-webkit-autofill,
+html.theme-dark textarea:-webkit-autofill:hover,
+html.theme-dark textarea:-webkit-autofill:focus,
+html.theme-dark textarea:-webkit-autofill:active,
+html.theme-dark select:-webkit-autofill,
+html.theme-dark select:-webkit-autofill:hover,
+html.theme-dark select:-webkit-autofill:focus,
+html.theme-dark select:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #121a1e inset !important;
+    -webkit-text-fill-color: var(--text-dark) !important;
+    caret-color: var(--text-dark);
+    transition: background-color 5000s ease-in-out 0s;
+}
+
 html.theme-dark input::placeholder,
 html.theme-dark textarea::placeholder {
     color: var(--text-muted) !important;
