@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     initializeProfileInteractions();
     initializePreferenceToggles();
     initializeReminderTimePreference();
+    initializePushTestButton();
     initializeStorageActions();
     initializeProfileSectionNavigation();
     initializeAccountDetailPanels();
@@ -2857,6 +2858,45 @@ function initializeReminderTimePreference() {
     if (!isPwaProfileContext()) {
         input.addEventListener('input', onReminderTimeChanged);
     }
+}
+
+// Send a real daily-style push on demand (uses the same payload/tag as cron).
+function initializePushTestButton() {
+    const btn = document.getElementById('sendTestPushBtn');
+    if (!btn || btn.dataset.pushTestBound === '1') return;
+    btn.dataset.pushTestBound = '1';
+    btn.addEventListener('click', async () => {
+        if (!isPwaProfileContext()) {
+            showNotification('Test pushes work in the installed app (PWA) only, not in a browser tab.', 'info');
+            return;
+        }
+        btn.disabled = true;
+        const old = btn.textContent;
+        btn.textContent = 'Sending...';
+        try {
+            const push = window.DiariPwaWebPush;
+            if (!push || typeof push.runClosedAppPushSelfCheck !== 'function') {
+                showNotification('Push module not ready. Reopen the app and try again.', 'info');
+                return;
+            }
+            const res = await push.runClosedAppPushSelfCheck();
+            if (res && res.ok) {
+                showNotification('Test sent. Fully close the app and watch for the banner — allow up to a few minutes on some phones.', 'success');
+            } else {
+                const detail =
+                    (res && res.test && (res.test.error || res.test.hint)) ||
+                    (res && res.register && res.register.error) ||
+                    (res && res.error) ||
+                    'Push test failed.';
+                showNotification(String(detail), 'info');
+            }
+        } catch (_) {
+            showNotification('Push test failed. Check connection and try again.', 'info');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = old;
+        }
+    });
 }
 
 // Initialize Preference Toggles
