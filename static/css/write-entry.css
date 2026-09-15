@@ -225,13 +225,19 @@
 .tag-btn.selected i,
 .tag-btn.selected span,
 .tag-btn.selected .tag-btn__icon-svg {
-    color: #fff;
+    color: #fff !important;
 }
 
 .tag-btn.selected:hover {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
     color: #fff;
+}
+
+.tag-btn.selected:hover i,
+.tag-btn.selected:hover span,
+.tag-btn.selected:hover .tag-btn__icon-svg {
+    color: #fff !important;
 }
 
 html.theme-dark body.page-write-entry .tag-btn.selected {
