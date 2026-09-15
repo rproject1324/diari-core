@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <link href="side-bar.css" rel="stylesheet">
-    <link href="profile.css?v=20260820c" rel="stylesheet">
+    <link href="profile.css?v=20260915b" rel="stylesheet">
     <link href="password-live.css" rel="stylesheet">
     <link href="theme.css?v=20260820d" rel="stylesheet">
     <link href="mobile-global.css" rel="stylesheet">
@@ -296,11 +296,12 @@
                                             <div class="notifications-info">
                                                 <h3 class="notifications-subtitle">Daily Reminders</h3>
                                                 <p class="notifications-description">Nudge to write every day.</p>
+                                                <p class="notifications-description pwa-notify-os-warning" id="dailyRemindersOsWarning" hidden>Phone notifications are blocked for DiariCore, so reminders can't appear. Open Android Settings → Apps → DiariCore → Notifications and turn them on.</p>
                                             </div>
                                         </div>
                                         <div class="notifications-control">
                                             <label class="toggle-switch">
-                                                <input type="checkbox" id="toggleDailyReminders" checked>
+                                                <input type="checkbox" id="toggleDailyReminders">
                                                 <span class="toggle-slider"></span>
                                             </label>
                                         </div>
@@ -776,8 +777,8 @@
     <script src="pwa-notification-idb.js" data-diari-src="pwa-notification-idb.js"></script>
     <script src="pwa-notification-templates.js" data-diari-src="pwa-notification-templates.js"></script>
     <script src="pwa-web-push.js" data-diari-src="pwa-web-push.js"></script>
-    <script src="pwa-notifications.js" data-diari-src="pwa-notifications.js"></script>
+    <script src="pwa-notifications.js?v=20260915b" data-diari-src="pwa-notifications.js"></script>
     <script src="pwa-profile-offline.js"></script>
-    <script src="profile.js"></script>
+    <script src="profile.js?v=20260915b"></script>
 </body>
 </html>

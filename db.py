@@ -2567,7 +2567,10 @@ def prune_push_subscriptions_for_user(
 
 
 def list_user_ids_with_daily_reminders_enabled() -> list[int]:
-    """User ids with notifications.dailyEnabled in ui_preferences_json (for cron diagnostics)."""
+    """User ids with notifications.dailyEnabled explicitly true in ui_preferences_json.
+
+    Default is OFF: missing/empty/malformed prefs mean the user never opted in.
+    """
     conn = get_conn()
     cur = conn.cursor()
     out: list[int] = []
@@ -2580,15 +2583,14 @@ def list_user_ids_with_daily_reminders_enabled() -> list[int]:
                 continue
             raw = d.get("ui_preferences_json")
             if not isinstance(raw, str) or not raw.strip():
-                out.append(uid)
                 continue
             try:
                 blob = json.loads(raw)
                 n = blob.get("notifications") if isinstance(blob, dict) else {}
-                if not isinstance(n, dict) or n.get("dailyEnabled", True) is not False:
+                if isinstance(n, dict) and n.get("dailyEnabled") is True:
                     out.append(uid)
             except Exception:
-                out.append(uid)
+                continue
         return out
     finally:
         conn.close()

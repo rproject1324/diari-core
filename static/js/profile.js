@@ -2723,14 +2723,14 @@ function buildPushNotificationPrefsPayloadForServer() {
     } catch (_) {
         /* ignore */
     }
-    let dailyEnabled = true;
+    let dailyEnabled = false;
     let streakEnabled = true;
     let insightEnabled = true;
     try {
         if (isPwaProfileContext() && window.DiariPwaNotifications?.isDailyRemindersEnabled) {
             dailyEnabled = window.DiariPwaNotifications.isDailyRemindersEnabled();
         } else {
-            dailyEnabled = localStorage.getItem('diariCorePwaDailyRemindersEnabled') !== '0';
+            dailyEnabled = localStorage.getItem('diariCorePwaDailyRemindersEnabled') === '1';
         }
         streakEnabled = localStorage.getItem('diariCorePwaStreakRemindersEnabled') !== '0';
         insightEnabled = localStorage.getItem('diariCorePwaInsightFollowupsEnabled') !== '0';
@@ -2913,6 +2913,25 @@ function initializePreferenceToggles() {
                     }
                     if (isChecked && isPwaProfileContext() && Notification?.permission === 'granted') {
                         await registerPushFromProfile({ quiet: true });
+                    }
+                    if (window.DiariPwaNotifications?.updateDailyRemindersOsWarning) {
+                        window.DiariPwaNotifications.updateDailyRemindersOsWarning();
+                    } else {
+                        try {
+                            const warn = document.getElementById('dailyRemindersOsWarning');
+                            if (warn) {
+                                warn.hidden = !(
+                                    isChecked &&
+                                    typeof Notification !== 'undefined' &&
+                                    Notification.permission === 'denied'
+                                );
+                            }
+                        } catch (_) {
+                            /* ignore */
+                        }
+                    }
+                    if (isChecked && isPwaProfileContext() && typeof Notification !== 'undefined' && Notification.permission === 'denied') {
+                        showNotification('Reminders saved, but phone notifications are blocked. Open Settings → Apps → DiariCore → Notifications to allow them.', 'info');
                     }
                     if (window.DiariPwaNotifications?.syncPrefsToWorker) {
                         void window.DiariPwaNotifications.syncPrefsToWorker();

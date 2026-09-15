@@ -458,7 +458,7 @@ def _user_notification_prefs(user_id: int) -> dict:
     if not isinstance(n, dict):
         n = {}
     return {
-        "dailyEnabled": n.get("dailyEnabled", True) is not False,
+        "dailyEnabled": n.get("dailyEnabled") is True,
         "streakEnabled": n.get("streakEnabled", True) is not False,
         "insightEnabled": n.get("insightEnabled", True) is not False,
         "reminderTimeOverride": (
@@ -1362,7 +1362,7 @@ def dispatch_due_notifications(debug: bool = False) -> dict:
         if user_id in subscribed_ids:
             continue
         prefs = _user_notification_prefs(user_id)
-        if not prefs.get("dailyEnabled", True):
+        if not prefs.get("dailyEnabled"):
             continue
         entries = _serialize_entries_for_user(user_id)
         if _has_entry_today_manila(entries):

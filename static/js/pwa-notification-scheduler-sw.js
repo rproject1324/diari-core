@@ -196,7 +196,7 @@ async function runNotificationChecks() {
 
     const streakRemindersOn =
         prefs.streakRemindersEnabled !== false &&
-        (prefs.dailyRemindersEnabled !== false);
+        (prefs.dailyRemindersEnabled === true);
     if (streakRemindersOn && !hasEntryToday(entries)) {
         const streak = computeStreakCount(entries);
         if (streak > 0 && typeof tpl.buildStreakReminderBody === 'function') {

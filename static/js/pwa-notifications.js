@@ -369,6 +369,7 @@
                     }
                     setDailyRemindersEnabled(dailyToggle.checked);
                     if (dailyToggle.checked) await requestPermissionIfNeeded();
+                    updateDailyRemindersOsWarning();
                     await syncPrefsToWorker();
                     if (global.DiariPwaWebPush?.syncNotificationPrefsToServer) {
                         void global.DiariPwaWebPush.syncNotificationPrefsToServer();
@@ -376,7 +377,44 @@
                 });
             }
         }
+        updateDailyRemindersOsWarning();
+        void hydrateDailyToggleFromServer(dailyToggle);
         applyPwaNotificationsOfflineState();
+    }
+
+    /** DB is the source of truth: pull the saved toggle so it survives
+     * redeploys and new devices. Falls back to localStorage when offline. */
+    async function hydrateDailyToggleFromServer(dailyToggle) {
+        try {
+            const res = await fetch('/api/push/schedule-status', { credentials: 'same-origin' });
+            if (!res.ok) return;
+            const data = await res.json().catch(() => null);
+            const sched = (data && (data.schedule || data)) || {};
+            if (typeof sched.dailyEnabled === 'undefined') return;
+            const serverOn = sched.dailyEnabled === true;
+            setDailyRemindersEnabled(serverOn);
+            if (dailyToggle) dailyToggle.checked = serverOn;
+            await syncPrefsToWorker();
+            updateDailyRemindersOsWarning();
+        } catch (_) {
+            /* offline — keep the local value */
+        }
+    }
+
+    /** Show the "blocked at OS level" warning only for the broken combo:
+     * toggle ON in the app while phone notifications are denied. */
+    function updateDailyRemindersOsWarning() {
+        try {
+            const warn = document.getElementById('dailyRemindersOsWarning');
+            if (!warn) return;
+            const blocked =
+                typeof Notification !== 'undefined' &&
+                Notification.permission === 'denied' &&
+                isDailyRemindersEnabled();
+            warn.hidden = !blocked;
+        } catch (_) {
+            /* ignore */
+        }
     }
 
     function isPwaNotificationsOffline() {
@@ -474,6 +512,7 @@
         stopScheduler,
         hydrateProfileNotificationUi,
         applyPwaNotificationsOfflineState,
+        updateDailyRemindersOsWarning,
         NOTIFY_TZ,
     };
 

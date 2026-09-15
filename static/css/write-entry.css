@@ -1267,6 +1267,32 @@ html.theme-dark .entry-img-spinner__bytes {
         line-height: 1.15;
     }
 
+    /* Mobile/PWA only: touch taps stick :hover, so a tapped tag can show the
+       PC hover wash instead of the user's theme color. Force selected tags to
+       the theme color on mobile; PC styles above are untouched. */
+    body.page-write-entry .tag-btn.selected,
+    body.page-write-entry .tag-btn.selected:hover,
+    body.page-write-entry .tag-btn.selected:active,
+    body.page-write-entry .tag-btn.selected:focus {
+        background-color: color-mix(in srgb, var(--primary-color) 55%, #1c262b) !important;
+        border-color: var(--primary-color) !important;
+        color: #fff !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    body.page-write-entry .tag-btn.selected i,
+    body.page-write-entry .tag-btn.selected span,
+    body.page-write-entry .tag-btn.selected .tag-btn__icon-svg,
+    body.page-write-entry .tag-btn.selected:hover i,
+    body.page-write-entry .tag-btn.selected:hover span,
+    body.page-write-entry .tag-btn.selected:hover .tag-btn__icon-svg,
+    body.page-write-entry .tag-btn.selected:active i,
+    body.page-write-entry .tag-btn.selected:active span,
+    body.page-write-entry .tag-btn.selected:active .tag-btn__icon-svg {
+        color: #fff !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45) !important;
+    }
+
     .feelings-grid.category-grid {
         grid-template-columns: repeat(4, 1fr);
         gap: 0.5rem;
@@ -2722,7 +2748,7 @@ html.theme-dark .mood-result-badge--amber {
         margin-right: -0.95rem;
         padding-left: 0.95rem;
         padding-right: 0.95rem;
-        margin-top: 0;
+        margin-top: 0.85rem;
         border-top: 1px solid var(--border-color);
     }
 

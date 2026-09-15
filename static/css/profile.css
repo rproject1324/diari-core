@@ -2748,6 +2748,19 @@ html.theme-dark .profile-security-status span {
         margin: 0.2rem 0 0;
         line-height: 1.35;
     }
+
+    body.page-profile .pwa-notify-os-warning {
+        color: #b3541e;
+        font-weight: 600;
+    }
+
+    body.page-profile .pwa-notify-os-warning[hidden] {
+        display: none;
+    }
+
+    html.theme-dark body.page-profile .pwa-notify-os-warning {
+        color: #f0a35e;
+    }
     
     body.page-profile .appearance-info .appearance-subtitle,
     body.page-profile .notifications-info .notifications-subtitle {

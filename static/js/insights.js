@@ -39,14 +39,18 @@ function insightsMobileTooltipPluginOpts() {
 /** Mobile: hide Chart.js tooltip (tap same bar again or empty chart area). */
 function insightsDismissChartTooltip(chart) {
     if (!chart) return;
-    chart._diariTipIdx = -1;
-    if (typeof chart.setActiveElements === 'function') chart.setActiveElements([]);
-    const tt = chart.tooltip;
-    if (tt) {
-        if (typeof tt.setActiveElements === 'function') tt.setActiveElements([], { x: 0, y: 0 });
-        tt.opacity = 0;
+    try {
+        chart._diariTipIdx = -1;
+        if (typeof chart.setActiveElements === 'function') chart.setActiveElements([]);
+        const tt = chart.tooltip;
+        if (tt) {
+            if (typeof tt.setActiveElements === 'function') tt.setActiveElements([], { x: 0, y: 0 });
+            tt.opacity = 0;
+        }
+        chart.update('none');
+    } catch (_) {
+        /* destroyed chart — nothing to dismiss */
     }
-    chart.update('none');
 }
 
 function insightsChartActiveTipIndex(chart) {
@@ -133,6 +137,9 @@ function insightsTryHandleChartLegendClick(chart, e) {
 function bindMoodByTagChartInteractions(chart) {
     if (!chart?.canvas) return;
     const canvas = chart.canvas;
+    // Same canvas element is reused across chart re-creations — always point at
+    // the live chart so taps never hit a destroyed instance (no tooltip).
+    canvas._diariMoodByTagChart = chart;
     if (canvas.dataset.diariMoodByTagBound === '1') return;
     canvas.dataset.diariMoodByTagBound = '1';
 
@@ -142,15 +149,16 @@ function bindMoodByTagChartInteractions(chart) {
     let lastTouchEndAt = 0;
 
     const handlePointer = (e) => {
-        if (insightsTryHandleChartLegendClick(chart, e)) return;
+        const live = canvas._diariMoodByTagChart || chart;
+        if (insightsTryHandleChartLegendClick(live, e)) return;
         if (!insightsIsMobileChartUi()) return;
         let elements = [];
         try {
-            elements = chart.getElementsAtEventForMode(e, 'index', { intersect: false }, true) || [];
+            elements = live.getElementsAtEventForMode(e, 'index', { intersect: false }, true) || [];
         } catch (_) {
             elements = [];
         }
-        insightsBarChartOnClick(chart, elements);
+        insightsBarChartOnClick(live, elements);
     };
 
     const handleClick = (e) => {
@@ -192,34 +200,44 @@ function insightsBarChartOnClick(chart, elements) {
         return;
     }
     chart._diariTipIdx = idx;
-    if (typeof chart.setActiveElements === 'function') chart.setActiveElements(elements);
-    if (chart.tooltip) {
-        if (typeof chart.tooltip.setActiveElements === 'function') {
-            chart.tooltip.setActiveElements(elements, { x: 0, y: 0 });
+    try {
+        if (typeof chart.setActiveElements === 'function') chart.setActiveElements(elements);
+        if (chart.tooltip) {
+            if (typeof chart.tooltip.setActiveElements === 'function') {
+                chart.tooltip.setActiveElements(elements, { x: 0, y: 0 });
+            }
+            chart.tooltip.opacity = 1;
         }
-        chart.tooltip.opacity = 1;
+        chart.update('none');
+    } catch (_) {
+        /* destroyed chart — ignore */
     }
-    chart.update('none');
 }
 
 function bindInsightsMobileChartTapToggle(chart) {
     if (!chart?.canvas || !insightsIsMobileChartUi()) return;
     const wrap = chart.canvas.closest('.chart-container');
-    if (!wrap || wrap.dataset.diariInsightsTap === '1') return;
+    if (!wrap) return;
+    // Charts are destroyed/recreated on tab switches and re-renders while the
+    // wrap DOM persists. Always point at the live chart so taps never hit a
+    // destroyed instance (which silently returns no elements = no tooltip).
+    wrap._diariInsightsChart = chart;
+    if (wrap.dataset.diariInsightsTap === '1') return;
     wrap.dataset.diariInsightsTap = '1';
 
     const handleTap = (e) => {
-        if (!insightsIsMobileChartUi()) return;
-        if (insightsTryHandleChartLegendClick(chart, e)) return;
+        const live = wrap._diariInsightsChart;
+        if (!live || !insightsIsMobileChartUi()) return;
+        if (insightsTryHandleChartLegendClick(live, e)) return;
         e.preventDefault();
         e.stopPropagation();
         let elements = [];
         try {
-            elements = chart.getElementsAtEventForMode(e, 'index', { intersect: false }, true) || [];
+            elements = live.getElementsAtEventForMode(e, 'index', { intersect: false }, true) || [];
         } catch (_) {
             elements = [];
         }
-        insightsBarChartOnClick(chart, elements);
+        insightsBarChartOnClick(live, elements);
     };
 
     wrap.addEventListener('click', handleTap, true);
