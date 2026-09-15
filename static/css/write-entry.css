@@ -218,7 +218,7 @@
 
 .tag-btn.selected {
     border-color: var(--primary-color);
-    background-color: var(--primary-color);
+    background-color: color-mix(in srgb, var(--primary-color) 80%, #1a1a1a 20%);
     color: #fff;
 }
 
@@ -229,8 +229,8 @@
 }
 
 .tag-btn.selected:hover {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+    background-color: color-mix(in srgb, var(--primary-color) 80%, #1a1a1a 20%);
+    border-color: color-mix(in srgb, var(--primary-color) 80%, #1a1a1a 20%);
     color: #fff;
 }
 
