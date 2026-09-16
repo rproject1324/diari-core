@@ -1072,13 +1072,18 @@ document.addEventListener('DOMContentLoaded', function() {
             window.DiariSecurity.setCsrfToken(loginPayload.csrfToken);
         }
 
+        // Show immediately (not at redirect time) so the toast actually paints
+        // during the sync-fetch + delay window on every flow, including 2FA.
+        showNotification(
+            u.isAdmin ? 'Admin login successful! Redirecting...' : 'Login successful! Redirecting...',
+            'success'
+        );
+
         function goAfterLoginHydrate() {
             if (u.isAdmin) {
-                showNotification('Admin login successful! Redirecting...', 'success');
                 window.location.href = 'admin.html';
                 return;
             }
-            showNotification('Login successful! Redirecting...', 'success');
             window.location.href = 'dashboard.html';
         }
 
