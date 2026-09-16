@@ -362,16 +362,8 @@ function entryMatchesSearch(entry, query) {
     return titleRaw.includes(q) || excerpt.includes(q) || tags.some((t) => t.includes(q));
 }
 
-function isEntriesGlobalSearchActive() {
-    return getEntriesSearchQuery().length > 0;
-}
-
 function getFilteredEntriesForSelectedMonth() {
-    // A text search spans ALL months/years; the month dropdown only scopes
-    // the plain browse view (and emotion/tag filters without search text).
-    const list = isEntriesGlobalSearchActive()
-        ? entriesMasterSorted
-        : (entriesByMonthKey[entriesSelectedMonthKey] || []);
+    const list = entriesByMonthKey[entriesSelectedMonthKey] || [];
     const query = getEntriesSearchQuery();
     const checked = getCheckedFilterValues();
     return list.filter((e) => entryMatchesSearch(e, query) && entryMatchesFilters(e, checked));
@@ -389,10 +381,7 @@ function renderEntriesView(options = {}) {
     if (!grid || !section) return;
 
     const filtered = getFilteredEntriesForSelectedMonth();
-    const searchingAll = isEntriesGlobalSearchActive();
-    const totalInMonth = searchingAll
-        ? entriesMasterSorted.length
-        : (entriesByMonthKey[entriesSelectedMonthKey] || []).length;
+    const totalInMonth = (entriesByMonthKey[entriesSelectedMonthKey] || []).length;
     const totalPages = Math.max(1, Math.ceil(filtered.length / ENTRIES_PAGE_SIZE));
     if (entriesCurrentPage > totalPages) entriesCurrentPage = totalPages;
     if (entriesCurrentPage < 1) entriesCurrentPage = 1;
@@ -405,9 +394,7 @@ function renderEntriesView(options = {}) {
         });
 
         if (monthHeaderText && entriesSelectedMonthKey) {
-            monthHeaderText.textContent = searchingAll
-                ? 'SEARCH RESULTS'
-                : formatMonthHeaderUpper(entriesSelectedMonthKey);
+            monthHeaderText.textContent = formatMonthHeaderUpper(entriesSelectedMonthKey);
         }
 
         if (paginationEl && prevBtn && nextBtn && indicator) {
