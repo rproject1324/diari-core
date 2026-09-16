@@ -1403,6 +1403,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     const writeRemovePhotoConfirmBtn = document.getElementById('writeRemovePhotoConfirmBtn');
     const writeRemovePhotoPreviewTitle = document.getElementById('writeRemovePhotoPreviewTitle');
     const writeRemovePhotoPreviewMeta = document.getElementById('writeRemovePhotoPreviewMeta');
+    const emptyEntryModal = document.getElementById('emptyEntryModal');
+    const emptyEntryOkBtn = document.getElementById('emptyEntryOkBtn');
 
     let pendingDeleteTagName = null;
     let pendingRemoveWritePhotoId = null;
@@ -1461,8 +1463,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         const t = writeDeleteTagModal;
         const c = customTagModal;
         const rp = writeRemovePhotoModal;
+        const em = emptyEntryModal;
         const allClosed =
-            (!d || d.hidden) && (!t || t.hidden) && (!c || c.hidden) && (!rp || rp.hidden);
+            (!d || d.hidden) && (!t || t.hidden) && (!c || c.hidden) && (!rp || rp.hidden) && (!em || em.hidden);
         if (allClosed) document.body.style.overflow = '';
     }
 
@@ -1594,6 +1597,43 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
     writeRemovePhotoModal?.addEventListener('click', (e) => {
         if (e.target?.matches?.('[data-write-remove-photo-dismiss]')) closeWriteRemovePhotoModal();
+    });
+
+    function openEmptyEntryModal() {
+        if (!emptyEntryModal) {
+            try {
+                journalText?.focus();
+            } catch (_) {}
+            return;
+        }
+        emptyEntryModal.hidden = false;
+        document.body.style.overflow = 'hidden';
+        try {
+            emptyEntryOkBtn?.focus({ preventScroll: true });
+        } catch (_) {
+            emptyEntryOkBtn?.focus();
+        }
+    }
+
+    function closeEmptyEntryModal() {
+        if (!emptyEntryModal) return;
+        emptyEntryModal.hidden = true;
+        releaseBodyScrollIfNoModals();
+        try {
+            journalText?.focus({ preventScroll: true });
+        } catch (_) {
+            journalText?.focus();
+        }
+    }
+
+    emptyEntryOkBtn?.addEventListener('click', () => closeEmptyEntryModal());
+    emptyEntryModal?.addEventListener('click', (e) => {
+        if (e.target?.matches?.('[data-empty-entry-dismiss]')) closeEmptyEntryModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && emptyEntryModal && !emptyEntryModal.hidden) {
+            closeEmptyEntryModal();
+        }
     });
 
     function filteredPickerIcons() {
@@ -2154,7 +2194,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
         const entryDateTimeLocal = manualDateTime && journalDateTimeInput?.value ? String(journalDateTimeInput.value) : '';
         if (!entryText) {
-            alert('Please write something in your journal entry.');
+            openEmptyEntryModal();
             return;
         }
         const entryWordCount = countEntryWords(entryText);
@@ -2448,7 +2488,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                 t.closest('#writeDiscardModal') ||
                 t.closest('#writeDeleteTagModal') ||
                 t.closest('#customTagModal') ||
-                t.closest('#writeRemovePhotoModal')
+                t.closest('#writeRemovePhotoModal') ||
+                t.closest('#emptyEntryModal')
             )
         return;
             const lb = document.getElementById('photoLightbox');

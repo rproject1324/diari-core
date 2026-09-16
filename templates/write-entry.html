@@ -11,7 +11,7 @@
     <link href="vendor/bootstrap-icons.min.css" rel="stylesheet">
     <link href="side-bar.css" rel="stylesheet">
     <link href="dashboard.css" rel="stylesheet">
-    <link href="write-entry.css?v=20260915b" rel="stylesheet">
+    <link href="write-entry.css?v=20260915c" rel="stylesheet">
     <link href="theme.css?v=20260915a" rel="stylesheet">
     <link href="mobile-global.css" rel="stylesheet">
     <link rel="preload" as="fetch" href="/noto-emoji/book.json?v=20260517b">
@@ -411,6 +411,29 @@
         </div>
     </div>
 
+    <div class="write-flow-modal write-empty-entry-modal" id="emptyEntryModal" hidden role="dialog" aria-modal="true" aria-labelledby="emptyEntryTitle">
+        <div class="write-flow-modal__backdrop" data-empty-entry-dismiss="1"></div>
+        <div class="write-flow-modal__panel">
+            <div class="write-flow-modal__section write-flow-modal__section--header">
+                <div class="write-flow-modal__header-row">
+                    <div class="write-flow-modal__icon-badge write-flow-modal__icon-badge--warn" aria-hidden="true">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+                    <div class="write-flow-modal__header-text">
+                        <h2 id="emptyEntryTitle" class="write-flow-modal__title">Nothing to save yet</h2>
+                        <p class="write-flow-modal__desc">Please write something in your journal entry before saving.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="write-flow-modal__divider" aria-hidden="true"></div>
+            <div class="write-flow-modal__section write-flow-modal__section--actions">
+                <div class="write-flow-modal__actions write-flow-modal__actions--split">
+                    <button type="button" class="write-flow-modal__btn write-flow-modal__btn--primary" id="emptyEntryOkBtn">Got it</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="photo-lightbox" id="photoLightbox" hidden>
         <button type="button" class="photo-lightbox__close" id="photoLightboxClose" aria-label="Close preview">
             <i class="bi bi-x-lg"></i>
@@ -538,6 +561,6 @@
     <script src="/diari-shell.js"></script>
     <script src="/mood-analysis-ui.js"></script>
     <script src="/image-upload-utils.js"></script>
-    <script src="/write-entry.js"></script>
+    <script src="/write-entry.js?v=20260915c"></script>
 </body>
 </html>
