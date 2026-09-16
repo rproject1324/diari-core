@@ -273,9 +273,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================================================
     const refreshDashboardBtn = document.getElementById('refreshDashboardBtn');
     refreshDashboardBtn?.addEventListener('click', () => {
-        refreshDashboardBtn.innerHTML = '<i class="bi bi-arrow-clockwise spin"></i> Refreshing...';
+        refreshDashboardBtn.innerHTML = '<i class="bi bi-arrow-clockwise spin"></i> <span class="btn-text">Refreshing...</span>';
         loadDashboard().finally(() => {
-            refreshDashboardBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Refresh';
+            refreshDashboardBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> <span class="btn-text">Refresh</span>';
         });
     });
 
