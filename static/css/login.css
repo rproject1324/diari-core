@@ -1413,11 +1413,19 @@ html.theme-dark .lockout-countdown {
 }
 
 .login-reset-step .form-group--pwd-full:has(.pwd-live:not([hidden])) {
-    margin-bottom: 0.25rem !important;
+    margin-bottom: 0.15rem !important;
+}
+
+.login-reset-step .form-group--pwd-full .pwd-live {
+    margin-top: 0.15rem !important;
+}
+
+.login-reset-step .form-group--pwd-full .pwd-strength {
+    margin-top: 0.2rem !important;
 }
 
 .login-reset-step .login-form .form-group {
-    margin-bottom: 0.15rem !important;
+    margin-bottom: 0.1rem !important;
 }
 
 .login-reset-step .login-form .form-group:last-of-type {
