@@ -748,6 +748,27 @@ html.theme-dark .admin-sidebar {
     color: #059669;
 }
 
+/* Recent activity word-count pill: stacked number above label, centered */
+.badge.words-pill {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    line-height: 1.25;
+    text-align: center;
+    min-width: 3.4rem;
+}
+
+.words-pill__num {
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.words-pill__label {
+    font-size: 0.66rem;
+    font-weight: 700;
+}
+
 .badge-warning {
     background: rgba(245, 158, 11, 0.14);
     color: #D97706;
@@ -776,6 +797,14 @@ html.theme-dark .admin-sidebar {
 .badge-emotion-anxious { background: rgba(249, 115, 22, 0.15); color: #C2410C; }
 .badge-emotion-angry { background: rgba(239, 68, 68, 0.15); color: #B91C1C; }
 .badge-emotion-neutral { background: rgba(107, 114, 128, 0.15); color: #4B5563; }
+
+/* Audit log Details cell: spaced pills on both PC and mobile */
+.audit-details-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: flex-start;
+}
 
 /* User Stats & Filter Bar */
 .user-stats-bar {
@@ -1759,6 +1788,26 @@ label {
         margin-bottom: 1.25rem;
     }
 
+    #tab-analytics .section-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #tab-analytics .range-selector {
+        display: flex;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #tab-analytics .range-btn {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 0.45rem 0.2rem;
+        font-size: 0.76rem;
+        text-align: center;
+        white-space: nowrap;
+    }
+
     .section-header-title-row {
         display: flex;
         align-items: center;
@@ -1811,6 +1860,16 @@ label {
     }
 
     .user-details-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.85rem 0.75rem;
+    }
+
+    .user-detail-item--wide {
+        grid-column: 1 / -1;
+    }
+
+    .user-detail-val {
+        overflow-wrap: anywhere;
+        word-break: break-word;
     }
 }

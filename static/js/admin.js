@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </td>
                     <td><span class="${emoBadgeClass}">${escapeHtml(act.emotion)}</span></td>
                     <td><span class="text-capitalize small fw-semibold">${escapeHtml(act.sentiment)}</span></td>
-                    <td><span class="badge badge-operational">${act.words} words</span></td>
+                    <td><span class="badge badge-operational words-pill"><strong class="words-pill__num">${act.words}</strong><span class="words-pill__label">words</span></span></td>
                     <td><span class="muted small">${formatDate(act.createdAt)}</span></td>
                 </tr>
             `;
@@ -644,7 +644,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="user-detail-label">Nickname / Username</span>
                             <span class="user-detail-val">@${escapeHtml(u.nickname)}</span>
                         </div>
-                        <div class="user-detail-item">
+                        <div class="user-detail-item user-detail-item--wide">
                             <span class="user-detail-label">Email Address</span>
                             <span class="user-detail-val">${escapeHtml(u.email)}</span>
                         </div>
@@ -1112,14 +1112,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const detailsSummary = Object.entries(log.details || {})
                     .map(([k, v]) => `<span class="badge badge-operational" style="font-size: 0.7rem;">${escapeHtml(k)}: ${escapeHtml(String(v))}</span>`)
-                    .join(' ') || '<span class="muted small">—</span>';
+                    .join('');
+                const detailsCell = detailsSummary
+                    ? `<div class="audit-details-pills">${detailsSummary}</div>`
+                    : '<span class="muted small">—</span>';
 
                 return `
                 <tr>
                     <td><span class="muted small">#${log.id}</span></td>
                     <td><span class="badge ${actionBadgeClass}">${escapeHtml(log.action)}</span></td>
                     <td><span class="fw-bold small">${escapeHtml(log.adminEmail)}</span></td>
-                    <td>${detailsSummary}</td>
+                    <td>${detailsCell}</td>
                     <td><span class="muted small">${escapeHtml(log.ipAddress)}</span></td>
                     <td><span class="muted small">${formatDate(log.createdAt)}</span></td>
                 </tr>
