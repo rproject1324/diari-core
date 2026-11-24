@@ -574,9 +574,15 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 async function syncInsightsEntriesFromApi() {
+    // Await the app's shared boot sync. With an empty cache it resolves only
+    // after the server entries have been written to localStorage — otherwise
+    // we draw from an empty cache and redraw when those entries arrive.
+    if (window.DiariOffline?.awaitServerState) {
+        await window.DiariOffline.awaitServerState();
+        return;
+    }
     if (window.DiariOffline?.syncEntriesFromApi) {
         await window.DiariOffline.syncEntriesFromApi();
-        return;
     }
 }
 
