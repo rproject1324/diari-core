@@ -561,8 +561,16 @@ document.addEventListener('DOMContentLoaded', async function() {
             } catch (error) {
                 console.warn('Insights background sync failed:', error);
             } finally {
-                INSIGHTS_INITIAL_SYNC_DONE = true;
-                refreshInsightsFromSyncedStorage();
+                const build = () => {
+                    if (INSIGHTS_INITIAL_SYNC_DONE) return;
+                    INSIGHTS_INITIAL_SYNC_DONE = true;
+                    refreshInsightsFromSyncedStorage();
+                };
+                // The boot sync writes entries and dispatches its refresh event
+                // shortly after the await resolves. Always let that land before
+                // the single chart build, otherwise entries arriving afterwards
+                // force a second build and replay the line animation.
+                setTimeout(build, 700);
             }
         })();
     }, 0);
