@@ -2155,7 +2155,9 @@
 
         const begin = () => {
             if (!isAuthenticatedAppPage()) return;
-            startSyncEventStream();
+            // Do NOT open an EventSource here. /api/sync/stream is an infinite
+            // response; with the single sync gunicorn worker it pins the whole
+            // server and every other request (login, pages, API) queues up.
             tick();
             liveRemoteSyncTimer = global.setInterval(tick, LIVE_REMOTE_SYNC_MS);
         };
@@ -2164,7 +2166,6 @@
 
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
-                startSyncEventStream();
                 tick();
             } else {
                 stopSyncEventStream();
