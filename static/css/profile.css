@@ -1136,6 +1136,38 @@ button.profile-account-card .btn-edit {
     margin: 0;
 }
 
+.profile-account-detail-summary__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.profile-account-detail-summary__remove {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: 10px;
+    border: 1px solid rgba(217, 123, 123, 0.45);
+    background: #fff;
+    color: #c05252;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.profile-account-detail-summary__remove:hover {
+    background: rgba(217, 123, 123, 0.1);
+    border-color: #c05252;
+}
+
+.profile-account-detail-summary__remove[hidden] {
+    display: none;
+}
+
 .profile-account-detail-summary__change {
     display: inline-flex;
     align-items: center;
@@ -1596,8 +1628,13 @@ html.theme-dark .profile-security-status span {
         flex-wrap: wrap;
     }
 
-    .profile-account-detail-summary__change {
+    .profile-account-detail-summary__actions {
         width: 100%;
+    }
+
+    .profile-account-detail-summary__remove,
+    .profile-account-detail-summary__change {
+        flex: 1;
         justify-content: center;
         margin-top: 0.25rem;
     }

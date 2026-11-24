@@ -322,6 +322,19 @@ function applyProfileOverviewAvatar(user) {
     }
 }
 
+function syncRemovePhotoButtonVisibility() {
+    const btn = document.getElementById('profilePersonalRemovePhotoBtn');
+    if (!btn) return;
+    let user = null;
+    try {
+        user = JSON.parse(localStorage.getItem('diariCoreUser') || 'null');
+    } catch (_) {
+        user = null;
+    }
+    const dataUrl = user && typeof user.avatarDataUrl === 'string' ? user.avatarDataUrl.trim() : '';
+    btn.hidden = !dataUrl;
+}
+
 function hydratePersonalInfoPanel() {
     let user = null;
     try {
@@ -362,6 +375,7 @@ function hydratePersonalInfoPanel() {
             initialsEl.textContent = profileInitialsFromUser(user);
         }
     }
+    syncRemovePhotoButtonVisibility();
 
     if (firstEl) firstEl.value = user?.firstName != null ? String(user.firstName) : '';
     if (lastEl) lastEl.value = user?.lastName != null ? String(user.lastName) : '';
@@ -2555,6 +2569,7 @@ function initializeProfileInteractions() {
         } catch (_) {
             applyProfileOverviewAvatar(null);
         }
+        syncRemovePhotoButtonVisibility();
     });
 
     // Avatar: open file picker, resize, save to diariCoreUser.avatarDataUrl, sync sidebar
@@ -2660,6 +2675,80 @@ function initializeProfileInteractions() {
                     })();
                 });
             });
+    }
+
+    const personalRemovePhotoBtn = document.getElementById('profilePersonalRemovePhotoBtn');
+    if (personalRemovePhotoBtn) {
+        personalRemovePhotoBtn.addEventListener('click', async function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            let user = null;
+            try {
+                user = JSON.parse(localStorage.getItem('diariCoreUser') || 'null');
+            } catch (_) {
+                user = null;
+            }
+            if (!user || typeof user !== 'object') {
+                showNotification('Sign in to remove a profile photo.', 'warning');
+                return;
+            }
+            const current = typeof user.avatarDataUrl === 'string' ? user.avatarDataUrl.trim() : '';
+            if (!current) {
+                showNotification('There is no profile photo to remove.', 'info');
+                return;
+            }
+
+            // Update the local user immediately so every avatar on the page clears.
+            delete user.avatarDataUrl;
+            localStorage.setItem('diariCoreUser', JSON.stringify(user));
+            applyProfileOverviewAvatar(user);
+            syncRemovePhotoButtonVisibility();
+            document.dispatchEvent(new CustomEvent('diari-user-updated', { bubbles: true }));
+
+            if (await isPwaOfflineForUserActions()) {
+                if (window.DiariOffline && typeof window.DiariOffline.clearPwaAvatarPending === 'function') {
+                    window.DiariOffline.clearPwaAvatarPending();
+                }
+                showPwaSavedOfflineToast();
+                hydratePersonalInfoPanel();
+                return;
+            }
+
+            const uid = Number(user.id ?? user.userId ?? 0);
+            if (!Number.isInteger(uid) || uid <= 0) {
+                showNotification('Profile photo removed.', 'success');
+                hydratePersonalInfoPanel();
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/user/avatar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: uid, avatarDataUrl: null }),
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.error || 'remove failed');
+                const serverUser = data.user;
+                if (serverUser && typeof serverUser === 'object') {
+                    const next = { ...user, ...serverUser };
+                    if (!serverUser.avatarDataUrl) delete next.avatarDataUrl;
+                    localStorage.setItem('diariCoreUser', JSON.stringify(next));
+                    document.dispatchEvent(new CustomEvent('diari-user-updated', { bubbles: true }));
+                }
+                showNotification('Profile photo removed.', 'success');
+                hydratePersonalInfoPanel();
+            } catch (err) {
+                if (isPwaProfileContext()) showPwaSavedOfflineToast();
+                else {
+                    showNotification(
+                        'Photo removed on this device only. Could not sync to the server—try again when you are online.',
+                        'warning'
+                    );
+                }
+            }
+        });
     }
 }
 
@@ -3343,7 +3432,7 @@ function showNotification(message, type = 'info', durationMs) {
     // Style the notification
     notification.style.cssText = `
         position: fixed;
-        top: 20px;
+        bottom: 82px;
         right: 20px;
         padding: 1rem 1.5rem;
         border-radius: 12px;

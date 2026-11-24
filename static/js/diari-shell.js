@@ -96,7 +96,7 @@
 
         var offscreenX = mobile ? 'translateX(calc(100% + 24px))' : 'translateX(calc(100% + 28px))';
         toast.style.cssText =
-            'position:fixed;top:20px;z-index:13000;padding:0.75rem 1.1rem;border-radius:12px;display:flex;align-items:center;gap:0.65rem;font-weight:600;font-family:Inter,sans-serif;box-shadow:' +
+            'position:fixed;bottom:82px;z-index:13000;padding:0.75rem 1.1rem;border-radius:12px;display:flex;align-items:center;gap:0.65rem;font-weight:600;font-family:Inter,sans-serif;box-shadow:' +
             shadow +
             ';border:' +
             border +
@@ -115,6 +115,7 @@
         }
 
         if (mobile) {
+            toast.style.bottom = '78px';
             toast.style.right = '12px';
             toast.style.left = 'auto';
             toast.style.width = 'max-content';

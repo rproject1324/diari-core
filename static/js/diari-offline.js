@@ -22,6 +22,7 @@
     const PWA_PENDING_PROFILE_KEY = 'diariCorePwaPendingProfile';
     const PWA_PENDING_UI_PREFS_KEY = 'diariCorePwaPendingUiPrefs';
     const PWA_PENDING_AVATAR_KEY = 'diariCorePwaPendingAvatar';
+    const PWA_PENDING_AVATAR_CLEAR_KEY = 'diariCorePwaPendingAvatarClear';
     const SYNC_REV_KEY = 'diariCoreSyncRevision';
 
     const PUBLIC_PAGES = new Set([
@@ -528,7 +529,26 @@
             global.localStorage.removeItem(PWA_PENDING_AVATAR_KEY);
             return;
         }
+        global.localStorage.removeItem(PWA_PENDING_AVATAR_CLEAR_KEY);
         global.localStorage.setItem(PWA_PENDING_AVATAR_KEY, String(dataUrl).trim());
+    }
+
+    function readPwaPendingAvatarClear() {
+        try {
+            return global.localStorage.getItem(PWA_PENDING_AVATAR_CLEAR_KEY) === '1';
+        } catch {
+            return false;
+        }
+    }
+
+    /** Queue a photo removal while offline (PWA) so it syncs on reconnect. */
+    function clearPwaAvatarPending() {
+        if (!isPwaUiContext()) return;
+        global.localStorage.removeItem(PWA_PENDING_AVATAR_KEY);
+        try {
+            global.localStorage.setItem(PWA_PENDING_AVATAR_CLEAR_KEY, '1');
+        } catch (_) { /* ignore */ }
+        mergePwaProfileIntoUser({ avatarDataUrl: null });
     }
 
     function hasPwaPendingAvatar() {
@@ -602,16 +622,17 @@
 
     async function flushPwaAvatarPending() {
         if (!isOnline() || !isPwaUiContext()) return;
-        const dataUrl = readPwaPendingAvatar();
-        if (!dataUrl) return;
         const userId = getUserId();
         if (!userId) return;
         const fetchFn = global.DiariSecurity?.apiFetch || global.fetch;
+        const clearPending = readPwaPendingAvatarClear();
+        const dataUrl = readPwaPendingAvatar();
+        if (!clearPending && !dataUrl) return;
         try {
             const res = await fetchFn('/api/user/avatar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId, avatarDataUrl: dataUrl }),
+                body: JSON.stringify({ userId, avatarDataUrl: clearPending ? null : dataUrl }),
                 credentials: 'same-origin',
             });
             const data = await res.json().catch(() => ({}));
@@ -619,7 +640,11 @@
                 throw new Error(data.error || 'Avatar sync failed');
             }
             if (data.user) mergePwaProfileIntoUser(data.user);
-            writePwaPendingAvatar(null);
+            if (clearPending) {
+                try { global.localStorage.removeItem(PWA_PENDING_AVATAR_CLEAR_KEY); } catch (_) { /* ignore */ }
+            } else {
+                writePwaPendingAvatar(null);
+            }
         } catch (e) {
             console.warn('[DiariOffline] PWA avatar sync failed:', e);
         }
@@ -811,6 +836,7 @@
         writePwaPendingProfile(null);
         writePwaPendingUiPrefs(null);
         writePwaPendingAvatar(null);
+        try { global.localStorage.removeItem(PWA_PENDING_AVATAR_CLEAR_KEY); } catch (_) { /* ignore */ }
     }
 
     /**
@@ -2291,6 +2317,7 @@
         removeEditQueueForEntry,
         savePwaProfilePending,
         savePwaAvatarPending,
+        clearPwaAvatarPending,
         savePwaUiPrefsPending,
         hasPwaPendingProfile,
         hasPwaPendingAvatar,

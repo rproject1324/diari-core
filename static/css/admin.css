@@ -1431,7 +1431,7 @@ label {
 /* Toast Notifications */
 .admin-toast-container {
     position: fixed;
-    top: 24px;
+    bottom: 82px;
     right: 24px;
     z-index: 2000;
     display: flex;
@@ -1463,7 +1463,7 @@ label {
 .admin-toast-info { border-left-color: #3B82F6; }
 
 @keyframes toastSlideTop {
-    from { transform: translateY(-25px); opacity: 0; }
+    from { transform: translateY(25px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
 
@@ -1767,10 +1767,10 @@ label {
     }
 
     .admin-toast-container {
-        top: 65px;
+        top: auto;
         left: auto;
         right: 1rem;
-        bottom: auto;
+        bottom: 78px;
         width: 65%;
         max-width: 65%;
         align-items: flex-end;

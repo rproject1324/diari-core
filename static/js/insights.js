@@ -2106,7 +2106,7 @@ function showNotification(message, type = 'info') {
     
     notification.style.cssText = `
         position: fixed;
-        top: 20px;
+        bottom: 82px;
         right: 20px;
         padding: 1rem 1.5rem;
         border-radius: 12px;
