@@ -8,6 +8,8 @@ let MOOD_BY_TAG_CHART = null;
 let EMOTION_PIE_CHART = null;
 let EMOTION_PIE_MOBILE_CHART = null;
 let consistencyMonthSelectBound = false;
+let LAST_INSIGHTS_DATA_SIGNATURE = null;
+let INSIGHTS_CHARTS_READY = false;
 const CONSISTENCY_MONTH_STORAGE_KEY = 'diariCoreInsightsConsistencyMonth';
 
 function insightsIsMobileChartUi() {
@@ -422,16 +424,49 @@ async function loadEmotionTriggersDashboard() {
     }
 }
 
+/** Signature of just the fields that feed the charts (ignores sync-only metadata). */
+function insightsDataSignature(entries) {
+    return JSON.stringify(
+        entries
+            .map((e) => [
+                e.id || '',
+                e.date || '',
+                e.createdAt || '',
+                e.updatedAt || '',
+                e.emotionLabel || '',
+                e.feeling || '',
+                Array.isArray(e.tags) ? e.tags.join('|') : '',
+                e.all_probs ? JSON.stringify(e.all_probs) : '',
+            ])
+            .sort((a, b) => String(a[0] || a[1]).localeCompare(String(b[0] || b[1])))
+    );
+}
+
 function refreshInsightsFromSyncedStorage() {
     INSIGHTS_ENTRIES = JSON.parse(localStorage.getItem('diariCoreEntries') || '[]').filter((e) => e && e.date);
     HAS_INSIGHTS_DATA = INSIGHTS_ENTRIES.length > 0;
     applyInsightsEmptyState();
+
+    // The page refreshes on load, after the background API sync, and on remote
+    // state events. Rebuilding every canvas each time makes the charts blink.
+    // Redraw only when the entry data actually changed.
+    const signature = insightsDataSignature(INSIGHTS_ENTRIES);
+    if (INSIGHTS_CHARTS_READY && signature === LAST_INSIGHTS_DATA_SIGNATURE) {
+        void loadEmotionTriggersDashboard();
+        return;
+    }
+    LAST_INSIGHTS_DATA_SIGNATURE = signature;
+    INSIGHTS_CHARTS_READY = true;
+
     initializeWeeklyMoodChart();
     initializeWeeklyMoodChartDesktop();
     initializeEmotionPieChart();
     initializeEmotionPieChartMobile();
     initializeMoodByTagChart();
     loadInsightsData();
+    if (INSIGHTS_CONSISTENCY_CHART || document.body.classList.contains('insights-view-consistency')) {
+        renderInsightsConsistencyPanel();
+    }
     void loadEmotionTriggersDashboard();
 }
 
@@ -912,8 +947,8 @@ function renderInsightsConsistencyPanel() {
         if (wEl) wEl.textContent = bundle.entriesPerWeek.toFixed(1);
         if (tEl) tEl.textContent = bundle.mostActiveTimeLabel;
 
-        destroyInsightsConsistencyChart();
-
+        // Reuse the existing chart — updateConsistencyMonthBarChart() updates its
+        // data in place. Destroying here made the consistency chart blink on every render.
         const sel = document.getElementById('insightsConsistencyMonthSelect');
         populateInsightsConsistencyMonthSelect(sel);
         if (sel && !consistencyMonthSelectBound) {
@@ -1071,8 +1106,6 @@ function initializeInsightsHeroTabs() {
 
         if (isCons) {
             renderInsightsConsistencyPanel();
-        } else {
-            destroyInsightsConsistencyChart();
         }
         resizeInsightsCharts();
 
