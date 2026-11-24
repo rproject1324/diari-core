@@ -1869,7 +1869,6 @@
     let liveRemoteSyncStarted = false;
     let liveRemoteSyncTimer = null;
     const LIVE_REMOTE_SYNC_MS = 45000;
-    const LIVE_REMOTE_SYNC_START_DELAY_MS = 1200;
     let remotePullPromise = null;
     let syncEventSource = null;
     let syncEventSourceRetries = 0;
