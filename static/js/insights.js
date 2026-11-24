@@ -10,6 +10,7 @@ let EMOTION_PIE_MOBILE_CHART = null;
 let consistencyMonthSelectBound = false;
 let LAST_INSIGHTS_DATA_SIGNATURE = null;
 let INSIGHTS_CHARTS_READY = false;
+let INSIGHTS_INITIAL_SYNC_DONE = false;
 let TRIGGERS_LOAD_PROMISE = null;
 let TRIGGERS_RENDER_SIGNATURE = null;
 const CONSISTENCY_MONTH_STORAGE_KEY = 'diariCoreInsightsConsistencyMonth';
@@ -477,12 +478,12 @@ function insightsDataSignature(entries) {
     return JSON.stringify(
         entries
             .map((e) => [
-                e.id || '',
+                String(e.id ?? ''),
                 signatureDate(e.date || e.createdAt),
                 signatureDate(e.createdAt),
                 signatureDate(e.updatedAt),
-                String(e.emotionLabel || '').toLowerCase(),
-                String(e.feeling || '').toLowerCase(),
+                // Cached entries can carry only `feeling` while the API adds `emotionLabel`.
+                String(e.emotionLabel || e.feeling || '').toLowerCase(),
                 Array.isArray(e.tags)
                     ? e.tags.map((t) => String(t || '').trim().toLowerCase()).filter(Boolean).sort().join('|')
                     : '',
@@ -496,6 +497,11 @@ function refreshInsightsFromSyncedStorage() {
     INSIGHTS_ENTRIES = JSON.parse(localStorage.getItem('diariCoreEntries') || '[]').filter((e) => e && e.date);
     HAS_INSIGHTS_DATA = INSIGHTS_ENTRIES.length > 0;
     applyInsightsEmptyState();
+
+    // Wait for the initial background sync before drawing anything. Otherwise
+    // cached local entries are drawn first and the synced API entries force a
+    // second build — which looks like the charts "loading twice".
+    if (!INSIGHTS_INITIAL_SYNC_DONE) return;
 
     // The page refreshes on load, after the background API sync, and on remote
     // state events. Rebuilding every canvas each time makes the charts blink.
@@ -546,10 +552,17 @@ document.addEventListener('DOMContentLoaded', async function() {
     setTimeout(() => {
         void (async () => {
             try {
-                await syncInsightsEntriesFromApi();
-                refreshInsightsFromSyncedStorage();
-    } catch (error) {
+                // Bound the wait so the page never sits with empty charts if the
+                // API is slow; a later sync event still refreshes if data changes.
+                await Promise.race([
+                    syncInsightsEntriesFromApi(),
+                    new Promise((resolve) => setTimeout(resolve, 2000)),
+                ]);
+            } catch (error) {
                 console.warn('Insights background sync failed:', error);
+            } finally {
+                INSIGHTS_INITIAL_SYNC_DONE = true;
+                refreshInsightsFromSyncedStorage();
             }
         })();
     }, 0);
@@ -1387,9 +1400,20 @@ function emotionBreakdownData() {
 }
 
 function applyInsightsEmptyState() {
-    if (HAS_INSIGHTS_DATA) return;
-    const moodHeader = document.getElementById('insightsHeroSubtitle');
-    if (moodHeader) moodHeader.textContent = 'Insights will appear once you start journaling.';
+    const sub = document.getElementById('insightsHeroSubtitle');
+    if (HAS_INSIGHTS_DATA) {
+        // Deferred build may have shown the empty-state subtitle before sync filled data.
+        if (sub && sub.dataset.insightsEmpty === '1') {
+            sub.textContent = sub.dataset.insightsDefaultSubtitle || 'Deep dive into your emotional landscape.';
+            delete sub.dataset.insightsEmpty;
+        }
+        return;
+    }
+    if (sub) {
+        if (!sub.dataset.insightsDefaultSubtitle) sub.dataset.insightsDefaultSubtitle = sub.textContent.trim();
+        sub.textContent = 'Insights will appear once you start journaling.';
+        sub.dataset.insightsEmpty = '1';
+    }
 }
 
 // Initialize Weekly Emotion Chart (mobile — same Mon–Sun week + detail as desktop)
