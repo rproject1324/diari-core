@@ -886,6 +886,11 @@ input:checked + .toggle-slider:before {
     margin: 0 0 0.5rem 0.15rem;
 }
 
+/* Breathing room between the Appearance card and the NOTIFICATIONS heading. */
+.profile-prefs-card--notifications > .profile-prefs-eyebrow {
+    margin-top: 1.25rem;
+}
+
 .profile-prefs-card {
     display: contents;
 }

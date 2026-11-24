@@ -1956,6 +1956,7 @@ html.theme-dark .insights-consistency-month-select {
 
 /* Weekly snapshot: outer tinted shell + inner white panels (Memory Highlights–style) */
 .ins-card--highlights {
+    position: relative;
     padding: 1.35rem 1.4rem 1.45rem;
     border-radius: 16px;
     border: 1px solid rgba(var(--primary-rgb), 0.22);
@@ -1965,6 +1966,19 @@ html.theme-dark .insights-consistency-month-select {
         rgba(var(--primary-rgb), 0.06) 100%
     );
     box-shadow: var(--box-shadow);
+}
+
+/* Divider in the gap under the top happiness trigger card. */
+.ins-card--highlights::before {
+    content: '';
+    position: absolute;
+    left: 1.25rem;
+    right: 1.25rem;
+    top: -1.25rem;
+    height: 1px;
+    background: var(--border-color);
+    opacity: 0.9;
+    pointer-events: none;
 }
 
 .ins-card--highlights .ins-highlights__head {
