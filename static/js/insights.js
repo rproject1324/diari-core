@@ -538,9 +538,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         window.DiariShell.release();
     }
 
+    // Theme changes must not destroy/recreate the weekly charts — that replays
+    // their load animation. Update the line colors in place instead.
     window.addEventListener('diari-palette-changed', function () {
-        initializeWeeklyMoodChart();
-        initializeWeeklyMoodChartDesktop();
+        const theme = getChartTheme();
+        [WEEKLY_MOBILE_CHART, WEEKLY_DESKTOP_CHART].forEach((chart) => {
+            if (!chart) return;
+            const ds = chart.data.datasets[0];
+            ds.borderColor = theme.primary;
+            ds.backgroundColor = theme.primarySoft;
+            chart.update('none');
+        });
     });
 
     if (window.DiariChartFlow) DiariChartFlow.decorateChartContainers(document);
@@ -1453,9 +1461,7 @@ function initializeWeeklyMoodChart() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            // No load animation: the weekly trend must render at its final
-            // position immediately so a second sync refresh cannot replay it.
-            animation: false,
+            animation: chartFlowLoadAnimation(),
             plugins: {
                 legend: {
                     display: false,
@@ -1602,8 +1608,7 @@ function initializeWeeklyMoodChartDesktop() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            // Render instantly at final values; no baseline-to-value replay.
-            animation: false,
+            animation: chartFlowLoadAnimation(),
             plugins: {
                 legend: {
                     display: false,
