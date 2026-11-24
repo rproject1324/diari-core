@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <link href="side-bar.css" rel="stylesheet">
-    <link href="insights.css" rel="stylesheet">
+    <link href="insights.css?v=20261126b" rel="stylesheet">
     <link href="chart-flow.css" rel="stylesheet">
 <link href="theme.css" rel="stylesheet">
 <link href="mobile-select.css?v=20261016b" rel="stylesheet">
@@ -206,7 +206,34 @@
 
                         <aside class="insights-dashboard__aside">
                             <article class="ins-card ins-card--triggers" aria-label="Identified triggers">
-                                <div id="emotionTriggersDashboard" class="emotion-triggers-dashboard" aria-live="polite"></div>
+                                <div id="emotionTriggersDashboard" class="emotion-triggers-dashboard" aria-live="polite">
+                                    <div class="emotion-triggers-list emotion-triggers-skeleton" aria-hidden="true">
+                                        <div class="emotion-trigger-block">
+                                            <div class="emotion-trigger-block__top">
+                                                <span class="emotion-trigger-block__emoji skeleton-block skeleton-block--icon"></span>
+                                                <div class="emotion-trigger-block__intro">
+                                                    <span class="skeleton-block skeleton-block--eyebrow"></span>
+                                                    <span class="skeleton-block skeleton-block--title"></span>
+                                                </div>
+                                            </div>
+                                            <div class="skeleton-block skeleton-block--line"></div>
+                                            <div class="skeleton-block skeleton-block--line skeleton-block--short"></div>
+                                            <div class="skeleton-block skeleton-block--details"></div>
+                                        </div>
+                                        <div class="emotion-trigger-block">
+                                            <div class="emotion-trigger-block__top">
+                                                <span class="emotion-trigger-block__emoji skeleton-block skeleton-block--icon"></span>
+                                                <div class="emotion-trigger-block__intro">
+                                                    <span class="skeleton-block skeleton-block--eyebrow"></span>
+                                                    <span class="skeleton-block skeleton-block--title"></span>
+                                                </div>
+                                            </div>
+                                            <div class="skeleton-block skeleton-block--line"></div>
+                                            <div class="skeleton-block skeleton-block--line skeleton-block--short"></div>
+                                            <div class="skeleton-block skeleton-block--details"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </article>
 
                             <article class="ins-card ins-card--highlights">
@@ -297,6 +324,6 @@
     <script src="most-active-time.js"></script>
 <script src="chart-flow.js?v=20261124a"></script>
 <script src="mobile-select.js?v=20261016b"></script>
-<script src="insights.js?v=20261125f"></script>
+<script src="insights.js?v=20261126b"></script>
 </body>
 </html>

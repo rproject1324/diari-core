@@ -423,12 +423,7 @@ async function fetchAndRenderEmotionTriggersDashboard() {
         return;
     }
 
-    // Only show the loading placeholder on a first render. Repeating calls must
-    // not wipe an already-finished card with the placeholder before returning.
-    if (el.dataset.diariTriggersRendered !== '1') {
-        el.innerHTML =
-            '<p class="emotion-triggers-loading" role="status">Loading trigger patterns…</p>';
-    }
+    // The HTML ships a height-matched skeleton; leave it in place while loading.
 
     try {
         const summaryRes = await fetch(`/api/triggers/summary?userId=${encodeURIComponent(String(userId))}`);

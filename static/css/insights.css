@@ -851,6 +851,12 @@ body {
     line-height: 1.5;
 }
 
+/* Reserve the settled height so the Weekly snapshot below never shifts while
+   trigger data loads (or when only one of the two trigger cards is populated). */
+.ins-card--triggers {
+    min-height: 27rem;
+}
+
 .emotion-triggers-dashboard {
     min-height: 2rem;
 }
@@ -1069,6 +1075,61 @@ html.theme-dark .emotion-trigger-block__desc {
     border: 1px dashed var(--border-color);
     color: var(--text-secondary);
     font-size: 0.95rem;
+}
+
+/* Loading skeleton mirrors the final trigger cards so the Weekly snapshot
+   card below never shifts position when the real trigger data arrives. */
+.emotion-triggers-skeleton .skeleton-block {
+    display: block;
+    border-radius: 6px;
+    background: linear-gradient(90deg,
+        rgba(var(--primary-rgb), 0.08) 0%,
+        rgba(var(--primary-rgb), 0.16) 50%,
+        rgba(var(--primary-rgb), 0.08) 100%);
+    background-size: 200% 100%;
+    animation: insights-skeleton-shimmer 1.4s linear infinite;
+}
+
+.emotion-triggers-skeleton .skeleton-block--icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 12px;
+}
+
+.emotion-triggers-skeleton .skeleton-block--eyebrow {
+    width: 55%;
+    height: 0.65rem;
+    margin: 0.1rem 0 0.35rem;
+}
+
+.emotion-triggers-skeleton .skeleton-block--title {
+    width: 70%;
+    height: 1.15rem;
+}
+
+.emotion-triggers-skeleton .skeleton-block--line {
+    height: 0.7rem;
+    margin-top: 0.9rem;
+}
+
+.emotion-triggers-skeleton .skeleton-block--short {
+    width: 60%;
+    margin-top: 0.45rem;
+}
+
+.emotion-triggers-skeleton .skeleton-block--details {
+    height: 2.1rem;
+    margin-top: 1rem;
+    border-radius: 10px;
+}
+
+@keyframes insights-skeleton-shimmer {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .emotion-triggers-skeleton .skeleton-block { animation: none; }
 }
 
 .triggers-grid {
@@ -2052,6 +2113,10 @@ html.theme-dark .ins-highlight-chip {
 
     .insights-dashboard__aside {
         flex-direction: column !important;
+    }
+
+    .ins-card--triggers {
+        min-height: 24rem;
     }
 
     .ins-weekly-canvas--mobile {
