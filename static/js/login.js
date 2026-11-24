@@ -2372,7 +2372,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         notification.style.cssText = `
             position: fixed;
-            bottom: 82px;
+            top: 80px;
             right: 20px;
             padding: 1rem 1.5rem;
             border-radius: 10px;

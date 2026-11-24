@@ -1308,7 +1308,7 @@ html.theme-dark .lockout-countdown {
 /* Notification Styles */
 .notification {
     position: fixed;
-    bottom: 82px;
+    top: 80px;
     right: 20px;
     padding: 1rem 1.5rem;
     border-radius: 10px;
