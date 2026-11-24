@@ -80,7 +80,10 @@
             if (!meta?.data?.length) return;
 
             const ctx = chart.ctx;
-            const pts = meta.data.filter((pt) => pt && !pt.skip && pt.parsed?.y != null);
+            const pts = meta.data.filter(
+                (pt) => pt && !pt.skip && pt.parsed?.y != null &&
+                    Number.isFinite(pt.x) && Number.isFinite(pt.y)
+            );
             if (pts.length < 1) return;
 
             const rgb = readPrimaryRgb(chart);
@@ -157,7 +160,18 @@
                     : ds.backgroundColor;
 
                 meta.data.forEach((bar, i) => {
-                    if (!bar || bar.height < 2) return;
+                    // During the first animation frames stacked bars can have NaN/0
+                    // geometry. Passing a non-finite stop to createLinearGradient
+                    // throws and kills Chart.js's shared animation loop (leaving
+                    // every chart frozen at 0 height with dead tooltips).
+                    if (
+                        !bar ||
+                        !Number.isFinite(bar.x) ||
+                        !Number.isFinite(bar.y) ||
+                        !Number.isFinite(bar.width) ||
+                        !Number.isFinite(bar.height) ||
+                        bar.height < 2
+                    ) return;
 
                     const x = bar.x;
                     const y = bar.y;
@@ -223,7 +237,12 @@
             if (!meta?.data?.length) return;
 
             meta.data.forEach((arc, i) => {
-                if (!arc || arc.circumference <= 0) return;
+                if (
+                    !arc || arc.circumference <= 0 ||
+                    !Number.isFinite(arc.x) || !Number.isFinite(arc.y) ||
+                    !Number.isFinite(arc.startAngle) || !Number.isFinite(arc.endAngle) ||
+                    !Number.isFinite(arc.outerRadius) || !Number.isFinite(arc.innerRadius)
+                ) return;
 
                 const { x, y, startAngle, endAngle, outerRadius, innerRadius } = arc;
                 const ds = chart.data.datasets[0];

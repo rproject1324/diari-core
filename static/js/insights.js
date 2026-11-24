@@ -5,6 +5,8 @@ let WEEKLY_DESKTOP_CHART = null;
 let WEEKLY_MOBILE_CHART = null;
 let INSIGHTS_CONSISTENCY_CHART = null;
 let MOOD_BY_TAG_CHART = null;
+let EMOTION_PIE_CHART = null;
+let EMOTION_PIE_MOBILE_CHART = null;
 let consistencyMonthSelectBound = false;
 const CONSISTENCY_MONTH_STORAGE_KEY = 'diariCoreInsightsConsistencyMonth';
 
@@ -937,6 +939,22 @@ function renderInsightsConsistencyPanel() {
     }
 }
 
+/** Panels start hidden when the page is opened with #consistency — resize charts once visible. */
+function resizeInsightsCharts() {
+    requestAnimationFrame(() => {
+        [
+            WEEKLY_MOBILE_CHART,
+            WEEKLY_DESKTOP_CHART,
+            EMOTION_PIE_CHART,
+            EMOTION_PIE_MOBILE_CHART,
+            MOOD_BY_TAG_CHART,
+            INSIGHTS_CONSISTENCY_CHART,
+        ].forEach((chart) => {
+            if (chart && typeof chart.resize === 'function') chart.resize();
+        });
+    });
+}
+
 function insightsHeroSetMode(mode) {
     const title = document.querySelector('.insights-hero__title');
     const sub = document.getElementById('insightsHeroSubtitle');
@@ -1056,6 +1074,7 @@ function initializeInsightsHeroTabs() {
         } else {
             destroyInsightsConsistencyChart();
         }
+        resizeInsightsCharts();
 
         replaceInsightsUrlForTab(which);
         document.documentElement.classList.remove('insights-consistency-hash-boot', 'insights-consistency-await-data');
@@ -1627,8 +1646,16 @@ function initializeEmotionPieChart() {
         }
     };
     
-    const emotionDesktopChart = new Chart(ctx, config);
-    bindInsightsChartFlow(emotionDesktopChart);
+    // Chart.js refuses to reuse a canvas while its previous instance is alive.
+    // This runs on every synced refresh, so destroy the old chart first — otherwise
+    // the second render throws and aborts the rest of the refresh (tooltips/charts stale).
+    if (EMOTION_PIE_CHART) {
+        if (window.DiariChartFlow) DiariChartFlow.stopChartFlow(EMOTION_PIE_CHART);
+        EMOTION_PIE_CHART.destroy();
+        EMOTION_PIE_CHART = null;
+    }
+    EMOTION_PIE_CHART = new Chart(ctx, config);
+    bindInsightsChartFlow(EMOTION_PIE_CHART);
 
     // Custom desktop legend (clearer than default legend + avoids icons inside chart)
     const legendEl = document.getElementById('emotionLegendDesktop');
@@ -1711,8 +1738,13 @@ function initializeEmotionPieChartMobile() {
         }
     };
     
-    const emotionMobileChart = new Chart(ctx, config);
-    bindInsightsChartFlow(emotionMobileChart);
+    if (EMOTION_PIE_MOBILE_CHART) {
+        if (window.DiariChartFlow) DiariChartFlow.stopChartFlow(EMOTION_PIE_MOBILE_CHART);
+        EMOTION_PIE_MOBILE_CHART.destroy();
+        EMOTION_PIE_MOBILE_CHART = null;
+    }
+    EMOTION_PIE_MOBILE_CHART = new Chart(ctx, config);
+    bindInsightsChartFlow(EMOTION_PIE_MOBILE_CHART);
 
     if (HAS_INSIGHTS_DATA) {
         const legendItems = document.querySelectorAll('.emotion-legend-item');
