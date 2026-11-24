@@ -566,11 +566,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     INSIGHTS_INITIAL_SYNC_DONE = true;
                     refreshInsightsFromSyncedStorage();
                 };
-                // The boot sync writes entries and dispatches its refresh event
-                // shortly after the await resolves. Always let that land before
-                // the single chart build, otherwise entries arriving afterwards
-                // force a second build and replay the line animation.
-                setTimeout(build, 700);
+                build();
             }
         })();
     }, 0);
@@ -1457,7 +1453,9 @@ function initializeWeeklyMoodChart() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            animation: chartFlowLoadAnimation(),
+            // No load animation: the weekly trend must render at its final
+            // position immediately so a second sync refresh cannot replay it.
+            animation: false,
             plugins: {
                 legend: {
                     display: false,
@@ -1604,7 +1602,8 @@ function initializeWeeklyMoodChartDesktop() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            animation: chartFlowLoadAnimation(),
+            // Render instantly at final values; no baseline-to-value replay.
+            animation: false,
             plugins: {
                 legend: {
                     display: false,
