@@ -2,7 +2,7 @@
  * DiariCore PWA service worker — offline app shell + cached static assets.
  * API routes are never cached (session/auth stay fresh).
  */
-const CACHE_NAME = 'diaricore-pwa-v150';
+const CACHE_NAME = 'diaricore-pwa-v151';
 const PWA_PUSH_NOTIF_ICON = '/diariclogo-pwa-notif-192.png';
 const PWA_PUSH_NOTIF_BADGE = '/diariclogo.png';
 const PWA_CACHE_PREFIX = 'diaricore-pwa-';
@@ -397,17 +397,18 @@ self.addEventListener('fetch', (event) => {
         (async () => {
             /* ── Stale-while-revalidate (JS + CSS): paint from cache, refresh in background ── */
             if (networkFirst) {
+                // Match the full URL first so ?v= cache-busting actually works.
+                // A pathname-only match would serve stale JS/CSS forever.
                 const cachedJsCss =
-                    (await caches.match(path)) ||
                     (await caches.match(request)) ||
-                    (await caches.match('/' + path.split('/').pop()));
+                    (url.search ? null : await caches.match(path));
 
                 if (cachedJsCss) {
                     fetch(request)
                         .then((res) => {
                             if (res.ok) {
                                 const copy = res.clone();
-                                caches.open(CACHE_NAME).then((c) => c.put(path, copy));
+                                caches.open(CACHE_NAME).then((c) => c.put(request, copy));
                             }
                         })
                         .catch(() => {});
@@ -422,7 +423,7 @@ self.addEventListener('fetch', (event) => {
                     clearTimeout(tid);
                     if (res.ok) {
                         const copy = res.clone();
-                        caches.open(CACHE_NAME).then((c) => c.put(path, copy));
+                        caches.open(CACHE_NAME).then((c) => c.put(request, copy));
                     }
                     return res;
                 } catch (_) {
