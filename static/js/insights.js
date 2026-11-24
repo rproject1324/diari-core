@@ -457,19 +457,36 @@ async function fetchAndRenderEmotionTriggersDashboard() {
     }
 }
 
+/** Signature fields are normalized so local datetime strings and API ISO dates compare equal. */
+function signatureDate(value) {
+    if (!value) return '';
+    const t = new Date(value).getTime();
+    return Number.isFinite(t) ? String(t) : String(value);
+}
+
+function signatureProbabilities(probs) {
+    if (!probs || typeof probs !== 'object') return '';
+    return Object.keys(probs)
+        .sort()
+        .map((k) => `${k}:${Number(probs[k]) || 0}`)
+        .join(',');
+}
+
 /** Signature of just the fields that feed the charts (ignores sync-only metadata). */
 function insightsDataSignature(entries) {
     return JSON.stringify(
         entries
             .map((e) => [
                 e.id || '',
-                e.date || '',
-                e.createdAt || '',
-                e.updatedAt || '',
-                e.emotionLabel || '',
-                e.feeling || '',
-                Array.isArray(e.tags) ? e.tags.join('|') : '',
-                e.all_probs ? JSON.stringify(e.all_probs) : '',
+                signatureDate(e.date || e.createdAt),
+                signatureDate(e.createdAt),
+                signatureDate(e.updatedAt),
+                String(e.emotionLabel || '').toLowerCase(),
+                String(e.feeling || '').toLowerCase(),
+                Array.isArray(e.tags)
+                    ? e.tags.map((t) => String(t || '').trim().toLowerCase()).filter(Boolean).sort().join('|')
+                    : '',
+                signatureProbabilities(e.all_probs),
             ])
             .sort((a, b) => String(a[0] || a[1]).localeCompare(String(b[0] || b[1])))
     );
