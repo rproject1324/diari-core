@@ -10,6 +10,8 @@ let EMOTION_PIE_MOBILE_CHART = null;
 let consistencyMonthSelectBound = false;
 let LAST_INSIGHTS_DATA_SIGNATURE = null;
 let INSIGHTS_CHARTS_READY = false;
+let TRIGGERS_LOAD_PROMISE = null;
+let TRIGGERS_RENDER_SIGNATURE = null;
 const CONSISTENCY_MONTH_STORAGE_KEY = 'diariCoreInsightsConsistencyMonth';
 
 function insightsIsMobileChartUi() {
@@ -382,7 +384,27 @@ function renderTagBasedSummaryCard(summary) {
         </div>`;
 }
 
-async function loadEmotionTriggersDashboard() {
+/** One fetch per load — overlapping callers share the same promise. */
+function loadEmotionTriggersDashboard() {
+    if (!TRIGGERS_LOAD_PROMISE) {
+        TRIGGERS_LOAD_PROMISE = fetchAndRenderEmotionTriggersDashboard().finally(() => {
+            TRIGGERS_LOAD_PROMISE = null;
+        });
+    }
+    return TRIGGERS_LOAD_PROMISE;
+}
+
+/** Trigger card signature: ignores the randomly chosen wording so refreshes don't re-flash the card. */
+function triggerCardSignature(summary) {
+    return JSON.stringify([
+        summary.topStressTrigger || '',
+        summary.topHappinessTrigger || '',
+        summary.stressTopCount || 0,
+        summary.happinessTopCount || 0,
+    ]);
+}
+
+async function fetchAndRenderEmotionTriggersDashboard() {
     const el = document.getElementById('emotionTriggersDashboard');
     if (!el) return;
 
@@ -400,8 +422,12 @@ async function loadEmotionTriggersDashboard() {
         return;
     }
 
-    el.innerHTML =
-        '<p class="emotion-triggers-loading" role="status">Loading trigger patterns…</p>';
+    // Only show the loading placeholder on a first render. Repeating calls must
+    // not wipe an already-finished card with the placeholder before returning.
+    if (el.dataset.diariTriggersRendered !== '1') {
+        el.innerHTML =
+            '<p class="emotion-triggers-loading" role="status">Loading trigger patterns…</p>';
+    }
 
     try {
         const summaryRes = await fetch(`/api/triggers/summary?userId=${encodeURIComponent(String(userId))}`);
@@ -410,12 +436,19 @@ async function loadEmotionTriggersDashboard() {
             throw new Error(summaryJson.error || 'Could not load tag trigger summary.');
         }
 
+        const sig = triggerCardSignature(summaryJson);
+        if (sig === TRIGGERS_RENDER_SIGNATURE && el.dataset.diariTriggersRendered === '1') return;
+        TRIGGERS_RENDER_SIGNATURE = sig;
+        el.dataset.diariTriggersRendered = '1';
+
         const hasAnySignal = Boolean(summaryJson.topStressTrigger || summaryJson.topHappinessTrigger);
         if (!hasAnySignal) {
             el.innerHTML =
                 '<p class="emotion-triggers-empty">No strong trigger pattern yet. Add tags when writing entries, then save at least 3 stress-related and 3 happy entries.</p>';
             return;
         }
+        // A single render with the final wording — no intermediate description
+        // is shown while the background sync settles.
         el.innerHTML = `<div class="emotion-triggers-list">${renderTagBasedSummaryCard(summaryJson)}</div>`;
     } catch (err) {
         console.error('emotion triggers dashboard:', err);
@@ -452,7 +485,7 @@ function refreshInsightsFromSyncedStorage() {
     // Redraw only when the entry data actually changed.
     const signature = insightsDataSignature(INSIGHTS_ENTRIES);
     if (INSIGHTS_CHARTS_READY && signature === LAST_INSIGHTS_DATA_SIGNATURE) {
-        void loadEmotionTriggersDashboard();
+        // Nothing changed — don't rebuild charts or re-fetch the trigger card.
         return;
     }
     LAST_INSIGHTS_DATA_SIGNATURE = signature;
@@ -498,7 +531,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             try {
                 await syncInsightsEntriesFromApi();
                 refreshInsightsFromSyncedStorage();
-                await loadEmotionTriggersDashboard();
     } catch (error) {
                 console.warn('Insights background sync failed:', error);
             }
