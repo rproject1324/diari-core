@@ -576,7 +576,12 @@ body {
     .card {
         order: 2 !important;
         flex: 1 !important;
-        min-height: 60vh !important;
+        /* Reserve the height left below the illustrated header so the white
+           sheet always reaches the bottom of the screen. Mobile browsers that
+           do not flex-grow inside a min-height-only flex container would
+           otherwise leave a green strip under the sheet. */
+        min-height: calc(100vh - 35vh) !important;
+        min-height: calc(100dvh - 35vh) !important;
         align-self: unset !important;
         height: auto !important;
         position: relative;

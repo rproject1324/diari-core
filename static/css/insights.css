@@ -2129,8 +2129,11 @@ html.theme-dark .ins-highlight-chip {
         flex-direction: column !important;
     }
 
+    /* Mobile/PWA: do not reserve desktop's settled height for the trigger card.
+       The empty-state box should sit directly above the weekly trend with the
+       same 1rem gap used between the other cards. */
     .ins-card--triggers {
-        min-height: 24rem;
+        min-height: 0;
     }
 
     .ins-weekly-canvas--mobile {
