@@ -999,6 +999,9 @@ html.theme-dark .lockout-countdown {
     .login-left-panel:has(#resetPasswordForm:not([hidden])) {
         background: #ffffff !important;
         background-image: none !important;
+        /* Keep the sheet rounded in every OTP phase — some mobile browsers
+           repaint the composed background layer past the panel's clip. */
+        border-radius: 30px 30px 0 0 !important;
     }
 
     html.auth-phase-upper-bg .login-left-panel::before,
@@ -1009,6 +1012,7 @@ html.theme-dark .lockout-countdown {
         background-repeat: no-repeat;
         background-position: center bottom;
         background-size: cover;
+        border-radius: inherit !important;
     }
 
     /* Create Account / Sign-Up Form Panel Background (Mobile/PWA Platform only) */
